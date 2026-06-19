@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Plus, Edit2, Trash2, X, Upload, Loader2, Sparkles, Image as ImageIcon } from "lucide-react";
+import { Plus, Edit2, Trash2, X, Upload, Loader2, Sparkles } from "lucide-react";
 import Image from "next/image";
 
 interface Project {
@@ -80,7 +80,6 @@ export default function ProjectsManager() {
     setShowModal(true);
   };
 
-  // Handles image uploading to local /api/admin/upload API (Cloudinary/Mock fallback)
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -167,29 +166,29 @@ export default function ProjectsManager() {
       {/* Page Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-black font-outfit text-white tracking-wide">
+          <h1 className="text-3xl font-black font-space text-white tracking-wide">
             PORTFOLIO MANAGER
           </h1>
-          <p className="text-sm text-gray-400">
+          <p className="text-sm text-text-secondary">
             Create, update, or remove projects displaying in your showcase grid.
           </p>
         </div>
         <button
           onClick={openAddModal}
-          className="ripple-btn inline-flex items-center gap-2 px-5 py-3 rounded-full bg-gradient-to-r from-accent-cyan to-accent-purple text-primary-bg font-extrabold text-xs tracking-wider uppercase shadow-[0_0_15px_rgba(0,229,255,0.2)]"
+          className="btn-primary ripple-fx text-xs tracking-wider uppercase inline-flex items-center gap-2"
         >
-          <Plus className="w-4.5 h-4.5" />
+          <Plus className="w-4.5 h-4.5 text-[#0B0F1A]" />
           Add Project
         </button>
       </div>
 
       {/* Projects List Grid */}
       {loading ? (
-        <div className="text-center py-20 text-gray-500 text-sm font-semibold uppercase tracking-widest font-mono">
+        <div className="text-center py-20 text-text-disabled text-sm font-semibold uppercase tracking-widest font-mono">
           Reloading portfolio...
         </div>
       ) : projects.length === 0 ? (
-        <div className="text-center py-20 glass-panel border-white/5 bg-[#0D111F]/50 text-gray-500">
+        <div className="text-center py-20 card-standard border-white/5 bg-[#0D111F]/50 text-text-disabled">
           No projects found. Add your first item above!
         </div>
       ) : (
@@ -197,7 +196,7 @@ export default function ProjectsManager() {
           {projects.map((project) => (
             <div
               key={project.id}
-              className="glass-panel border-white/5 bg-[#0D111F]/50 overflow-hidden flex flex-col h-full group"
+              className="card-standard border-white/5 bg-[#0D111F]/50 overflow-hidden flex flex-col h-full group"
             >
               {/* Image preview */}
               <div className="relative h-44 w-full bg-primary-bg border-b border-white/5">
@@ -208,17 +207,17 @@ export default function ProjectsManager() {
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                   className="object-cover"
                 />
-                <span className="absolute top-3 left-3 px-2 py-0.5 rounded bg-primary-bg/90 backdrop-blur-sm text-[9px] font-black text-accent-cyan tracking-widest uppercase border border-accent-cyan/10">
+                <span className="absolute top-3 left-3 px-2 py-0.5 rounded bg-primary-bg/90 backdrop-blur-sm text-[9px] font-black text-accent-cyan tracking-widest uppercase border border-accent-cyan/10 font-space">
                   {project.category}
                 </span>
               </div>
 
               {/* Info */}
               <div className="p-5 flex flex-col flex-grow">
-                <h3 className="text-base font-bold font-outfit text-white">
+                <h3 className="text-base font-bold font-space text-white">
                   {project.title}
                 </h3>
-                <p className="text-xs text-gray-400 mt-2 line-clamp-2 leading-relaxed flex-grow">
+                <p className="text-xs text-text-secondary mt-2 line-clamp-2 leading-relaxed flex-grow">
                   {project.description}
                 </p>
 
@@ -226,14 +225,13 @@ export default function ProjectsManager() {
                 <div className="flex gap-2.5 mt-6 pt-4 border-t border-white/5">
                   <button
                     onClick={() => openEditModal(project)}
-                    className="flex-grow inline-flex items-center justify-center gap-1.5 py-2.5 rounded-lg border border-white/5 hover:border-accent-cyan/30 bg-white/[0.02] text-xs font-semibold text-gray-400 hover:text-white transition-colors"
+                    className="flex-grow inline-flex items-center justify-center gap-1.5 py-2.5 rounded-lg border border-white/5 hover:border-accent-cyan/30 bg-white/[0.02] text-xs font-semibold text-text-muted hover:text-white transition-colors cursor-pointer font-space"
                   >
-                    <Edit2 className="w-3.5 h-3.5" />
                     Edit Details
                   </button>
                   <button
                     onClick={() => handleDelete(project.id)}
-                    className="p-2.5 rounded-lg border border-white/5 hover:border-red-500/30 hover:bg-red-500/5 text-gray-500 hover:text-red-400 transition-colors"
+                    className="p-2.5 rounded-lg border border-white/5 hover:border-accent-danger/30 hover:bg-red-500/5 text-text-disabled hover:text-accent-danger transition-colors cursor-pointer"
                     title="Delete Project"
                   >
                     <Trash2 className="w-4.5 h-4.5" />
@@ -248,23 +246,23 @@ export default function ProjectsManager() {
       {/* Editor Modal */}
       {showModal && (
         <div className="fixed inset-0 z-50 bg-primary-bg/85 backdrop-blur-xl flex items-center justify-center p-4 overflow-y-auto">
-          <div className="relative w-full max-w-2xl glass-panel bg-secondary-bg border-white/10 p-6 md:p-8 shadow-2xl rounded-2xl my-8">
+          <div className="relative w-full max-w-2xl card-standard bg-secondary-bg border-white/10 p-6 md:p-8 shadow-2xl rounded-2xl my-8">
             {/* Close */}
             <button
               onClick={() => setShowModal(false)}
-              className="absolute top-4 right-4 p-2 rounded-full hover:bg-white/5 text-gray-400 hover:text-white transition-colors"
+              className="absolute top-4 right-4 p-2 rounded-full hover:bg-white/5 text-text-muted hover:text-white transition-colors cursor-pointer"
             >
               <X className="w-5 h-5" />
             </button>
 
-            <h3 className="text-2xl font-black font-outfit text-white mb-6">
+            <h3 className="text-2xl font-black font-space text-white mb-6">
               {editingProject ? "Edit Project Details" : "Create Portfolio Project"}
             </h3>
 
             <form onSubmit={handleSubmit} className="space-y-5">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                 <div>
-                  <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1.5">
+                  <label className="block text-xs font-semibold text-text-muted uppercase tracking-wider mb-1.5 font-space">
                     Project Title
                   </label>
                   <input
@@ -273,18 +271,18 @@ export default function ProjectsManager() {
                     placeholder="e.g. Disyn Brand Identity"
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
-                    className="w-full glass-input"
+                    className="input-field"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1.5">
+                  <label className="block text-xs font-semibold text-text-muted uppercase tracking-wider mb-1.5 font-space">
                     Category Tag
                   </label>
                   <select
                     value={category}
                     onChange={(e) => setCategory(e.target.value)}
-                    className="w-full glass-input cursor-pointer"
+                    className="input-field cursor-pointer"
                   >
                     <option value="Graphic Design">Graphic Design</option>
                     <option value="UI/UX">UI/UX</option>
@@ -295,7 +293,7 @@ export default function ProjectsManager() {
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1.5">
+                <label className="block text-xs font-semibold text-text-muted uppercase tracking-wider mb-1.5 font-space">
                   Short Description
                 </label>
                 <input
@@ -304,14 +302,14 @@ export default function ProjectsManager() {
                   placeholder="Summarize the project briefly for the grid..."
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
-                  className="w-full glass-input"
+                  className="input-field"
                 />
               </div>
 
               {/* Image Upload Row */}
               <div className="grid grid-cols-1 md:grid-cols-12 gap-4 items-center">
                 <div className="md:col-span-8">
-                  <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1.5">
+                  <label className="block text-xs font-semibold text-text-muted uppercase tracking-wider mb-1.5 font-space">
                     Project Visual URL
                   </label>
                   <input
@@ -320,11 +318,11 @@ export default function ProjectsManager() {
                     placeholder="https://images.unsplash.com/... or upload a file"
                     value={imageUrl}
                     onChange={(e) => setImageUrl(e.target.value)}
-                    className="w-full glass-input"
+                    className="input-field"
                   />
                 </div>
                 <div className="md:col-span-4 self-end">
-                  <label className="ripple-btn flex items-center justify-center gap-2 py-3 rounded-lg border border-white/10 hover:border-accent-cyan/30 text-xs font-bold text-gray-400 hover:text-white cursor-pointer bg-white/[0.01]">
+                  <label className="flex items-center justify-center gap-2 py-3 rounded-lg border border-white/10 hover:border-accent-cyan/30 text-xs font-bold text-text-muted hover:text-white cursor-pointer bg-white/[0.01]">
                     {uploading ? (
                       <>
                         <Loader2 className="w-4 h-4 animate-spin text-accent-cyan" />
@@ -356,12 +354,12 @@ export default function ProjectsManager() {
 
               {/* Case Study Details */}
               <div className="border-t border-white/5 pt-5 space-y-4">
-                <h4 className="text-xs font-black font-outfit uppercase tracking-widest text-accent-cyan flex items-center gap-2">
+                <h4 className="text-xs font-black font-space uppercase tracking-widest text-accent-cyan flex items-center gap-2">
                   <Sparkles className="w-4 h-4" /> Case Study Details (Conversion Builder)
                 </h4>
 
                 <div>
-                  <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">
+                  <label className="block text-xs font-semibold text-text-disabled uppercase tracking-wider mb-1.5 font-space">
                     The Problem
                   </label>
                   <textarea
@@ -370,12 +368,12 @@ export default function ProjectsManager() {
                     placeholder="What challenge was the client experiencing?"
                     value={problem}
                     onChange={(e) => setProblem(e.target.value)}
-                    className="w-full glass-input resize-none"
+                    className="input-field resize-none"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">
+                  <label className="block text-xs font-semibold text-text-disabled uppercase tracking-wider mb-1.5 font-space">
                     Our Solution
                   </label>
                   <textarea
@@ -384,12 +382,12 @@ export default function ProjectsManager() {
                     placeholder="How did you solve this problem utilizing your skills?"
                     value={solution}
                     onChange={(e) => setSolution(e.target.value)}
-                    className="w-full glass-input resize-none"
+                    className="input-field resize-none"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">
+                  <label className="block text-xs font-semibold text-text-disabled uppercase tracking-wider mb-1.5 font-space">
                     Business Impact
                   </label>
                   <textarea
@@ -398,14 +396,14 @@ export default function ProjectsManager() {
                     placeholder="What metrics or key outcomes resulted from the solution?"
                     value={impact}
                     onChange={(e) => setImpact(e.target.value)}
-                    className="w-full glass-input resize-none"
+                    className="input-field resize-none"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1.5">
-                  Keywords / Skills Tags <span className="text-gray-500">(comma-separated)</span>
+                <label className="block text-xs font-semibold text-text-muted uppercase tracking-wider mb-1.5 font-space">
+                  Keywords / Skills Tags <span className="text-text-disabled">(comma-separated)</span>
                 </label>
                 <input
                   type="text"
@@ -413,7 +411,7 @@ export default function ProjectsManager() {
                   placeholder="e.g. NextJS, Figma, UI/UX, AI Pipeline"
                   value={tags}
                   onChange={(e) => setTags(e.target.value)}
-                  className="w-full glass-input"
+                  className="input-field"
                 />
               </div>
 
@@ -421,13 +419,13 @@ export default function ProjectsManager() {
                 <button
                   type="button"
                   onClick={() => setShowModal(false)}
-                  className="ripple-btn px-5 py-3 rounded-xl border border-white/5 hover:border-white/10 text-gray-400 hover:text-white text-xs font-semibold uppercase tracking-wider"
+                  className="btn-secondary ripple-fx px-5 py-3 text-xs uppercase"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="ripple-btn px-6 py-3 rounded-xl bg-gradient-to-r from-accent-cyan to-accent-purple text-primary-bg font-extrabold text-xs tracking-wider uppercase"
+                  className="btn-primary ripple-fx px-6 py-3 text-xs uppercase"
                 >
                   {editingProject ? "Update Project" : "Create Project"}
                 </button>

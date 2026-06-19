@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Plus, Edit2, Trash2, X, AlertCircle } from "lucide-react";
+import { Plus, Edit2, Trash2, X } from "lucide-react";
 
 interface Package {
   id: string;
@@ -115,29 +115,29 @@ export default function PackagesManager() {
       {/* Page Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-black font-outfit text-white tracking-wide">
+          <h1 className="text-3xl font-black font-space text-white tracking-wide">
             PACKAGES & PLANS
           </h1>
-          <p className="text-sm text-gray-400">
+          <p className="text-sm text-text-secondary">
             Define service offerings, prices, and feature deliverables for your lead funnel.
           </p>
         </div>
         <button
           onClick={openAddModal}
-          className="ripple-btn inline-flex items-center gap-2 px-5 py-3 rounded-full bg-gradient-to-r from-accent-cyan to-accent-purple text-primary-bg font-extrabold text-xs tracking-wider uppercase shadow-[0_0_15px_rgba(0,229,255,0.2)]"
+          className="btn-primary ripple-fx text-xs tracking-wider uppercase inline-flex items-center gap-2"
         >
-          <Plus className="w-4.5 h-4.5" />
+          <Plus className="w-4.5 h-4.5 text-[#0B0F1A]" />
           Add Package
         </button>
       </div>
 
       {/* Packages Grid */}
       {loading ? (
-        <div className="text-center py-20 text-gray-500 text-sm font-semibold uppercase tracking-widest font-mono">
+        <div className="text-center py-20 text-text-disabled text-sm font-semibold uppercase tracking-widest font-mono">
           Reloading packages...
         </div>
       ) : packages.length === 0 ? (
-        <div className="text-center py-20 glass-panel border-white/5 bg-[#0D111F]/50 text-gray-500">
+        <div className="text-center py-20 card-standard border-white/5 bg-[#0D111F]/50 text-text-disabled">
           No service packages found. Create your first package above!
         </div>
       ) : (
@@ -145,17 +145,17 @@ export default function PackagesManager() {
           {packages.map((pack) => (
             <div
               key={pack.id}
-              className="glass-panel p-6 border-white/5 bg-[#0D111F]/50 flex flex-col h-full relative"
+              className="card-standard p-6 border-white/5 bg-[#0D111F]/50 flex flex-col h-full relative"
             >
               <div className="flex items-start justify-between">
-                <h3 className="text-xl font-black font-outfit text-white">
+                <h3 className="text-xl font-black font-space text-white">
                   {pack.title}
                 </h3>
-                <span className="text-2xl font-black font-outfit text-accent-cyan tracking-tight">
+                <span className="text-2xl font-black font-space text-accent-cyan tracking-tight">
                   {pack.price}
                 </span>
               </div>
-              <p className="text-xs text-gray-400 mt-2 line-clamp-2 leading-relaxed flex-grow">
+              <p className="text-xs text-text-secondary mt-2 line-clamp-2 leading-relaxed flex-grow">
                 {pack.description}
               </p>
 
@@ -174,14 +174,13 @@ export default function PackagesManager() {
               <div className="flex gap-2.5 mt-6 pt-4 border-t border-white/5">
                 <button
                   onClick={() => openEditModal(pack)}
-                  className="flex-grow inline-flex items-center justify-center gap-1.5 py-2.5 rounded-lg border border-white/5 hover:border-accent-cyan/30 bg-white/[0.02] text-xs font-semibold text-gray-400 hover:text-white transition-colors"
+                  className="flex-grow inline-flex items-center justify-center gap-1.5 py-2.5 rounded-lg border border-white/5 hover:border-accent-cyan/30 bg-white/[0.02] text-xs font-semibold text-text-muted hover:text-white transition-colors cursor-pointer font-space"
                 >
-                  <Edit2 className="w-3.5 h-3.5" />
                   Edit Package
                 </button>
                 <button
                   onClick={() => handleDelete(pack.id)}
-                  className="p-2.5 rounded-lg border border-white/5 hover:border-red-500/30 hover:bg-red-500/5 text-gray-500 hover:text-red-400 transition-colors"
+                  className="p-2.5 rounded-lg border border-white/5 hover:border-accent-danger/30 hover:bg-red-500/5 text-text-disabled hover:text-accent-danger transition-colors cursor-pointer"
                   title="Delete Package"
                 >
                   <Trash2 className="w-4.5 h-4.5" />
@@ -195,22 +194,22 @@ export default function PackagesManager() {
       {/* Editor Modal */}
       {showModal && (
         <div className="fixed inset-0 z-50 bg-primary-bg/85 backdrop-blur-xl flex items-center justify-center p-4">
-          <div className="relative w-full max-w-md glass-panel bg-secondary-bg border-white/10 p-6 md:p-8 shadow-2xl rounded-2xl">
+          <div className="relative w-full max-w-md card-standard bg-secondary-bg border-white/10 p-6 md:p-8 shadow-2xl rounded-2xl">
             {/* Close */}
             <button
               onClick={() => setShowModal(false)}
-              className="absolute top-4 right-4 p-2 rounded-full hover:bg-white/5 text-gray-400 hover:text-white transition-colors"
+              className="absolute top-4 right-4 p-2 rounded-full hover:bg-white/5 text-text-muted hover:text-white transition-colors cursor-pointer"
             >
               <X className="w-5 h-5" />
             </button>
 
-            <h3 className="text-2xl font-black font-outfit text-white mb-6">
+            <h3 className="text-2xl font-black font-space text-white mb-6">
               {editingPackage ? "Edit Package Plan" : "Create Pricing Package"}
             </h3>
 
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1.5">
+                <label className="block text-xs font-semibold text-text-muted uppercase tracking-wider mb-1.5 font-space">
                   Package Title
                 </label>
                 <input
@@ -219,12 +218,12 @@ export default function PackagesManager() {
                   placeholder="e.g. Brand Launch"
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
-                  className="w-full glass-input"
+                  className="input-field"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1.5">
+                <label className="block text-xs font-semibold text-text-muted uppercase tracking-wider mb-1.5 font-space">
                   Pricing Tag (e.g. $1,500)
                 </label>
                 <input
@@ -233,12 +232,12 @@ export default function PackagesManager() {
                   placeholder="e.g. $1,500"
                   value={price}
                   onChange={(e) => setPrice(e.target.value)}
-                  className="w-full glass-input"
+                  className="input-field"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1.5">
+                <label className="block text-xs font-semibold text-text-muted uppercase tracking-wider mb-1.5 font-space">
                   Brief Subtext Description
                 </label>
                 <input
@@ -247,14 +246,14 @@ export default function PackagesManager() {
                   placeholder="e.g. Complete design identity for startups..."
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
-                  className="w-full glass-input"
+                  className="input-field"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1.5 flex items-center justify-between">
+                <label className="block text-xs font-semibold text-text-muted uppercase tracking-wider mb-1.5 flex items-center justify-between font-space">
                   <span>Deliverables / Features List</span>
-                  <span className="text-[10px] text-gray-500 font-mono">one per line</span>
+                  <span className="text-[10px] text-text-disabled font-mono">one per line</span>
                 </label>
                 <textarea
                   rows={5}
@@ -262,7 +261,7 @@ export default function PackagesManager() {
                   placeholder="Logo Design Suite&#10;Typography Guidelines&#10;Social Media Templates"
                   value={features}
                   onChange={(e) => setFeatures(e.target.value)}
-                  className="w-full glass-input resize-none"
+                  className="input-field resize-none"
                 />
               </div>
 
@@ -270,13 +269,13 @@ export default function PackagesManager() {
                 <button
                   type="button"
                   onClick={() => setShowModal(false)}
-                  className="ripple-btn px-5 py-3 rounded-xl border border-white/5 hover:border-white/10 text-gray-400 hover:text-white text-xs font-semibold uppercase tracking-wider"
+                  className="btn-secondary ripple-fx px-5 py-3 text-xs uppercase"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="ripple-btn px-6 py-3 rounded-xl bg-gradient-to-r from-accent-cyan to-accent-purple text-primary-bg font-extrabold text-xs tracking-wider uppercase"
+                  className="btn-primary ripple-fx px-6 py-3 text-xs uppercase"
                 >
                   {editingPackage ? "Update Package" : "Create Package"}
                 </button>

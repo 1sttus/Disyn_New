@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Check, Send, Sparkles, X, MessageSquare, Loader2, ArrowRight } from "lucide-react";
+import { Check, Send, Sparkles, X, MessageSquare, Loader2 } from "lucide-react";
 
 interface Package {
   id: string;
@@ -110,7 +110,7 @@ export default function PricingSection() {
         {/* Section Header */}
         <div className="text-center mb-16">
           <span className="text-xs font-bold tracking-widest text-accent-cyan uppercase">PRICING PACKAGES</span>
-          <h2 className="text-3xl md:text-5xl font-black font-outfit mt-2 text-white">
+          <h2 className="text-3xl md:text-5xl font-black font-space mt-2 text-white">
             CHOOSE YOUR SCALE
           </h2>
           <div className="w-12 h-1 bg-gradient-to-r from-accent-cyan to-accent-purple mx-auto mt-4 rounded-full" />
@@ -120,50 +120,47 @@ export default function PricingSection() {
         {loading ? (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {[1, 2, 3].map((n) => (
-              <div key={n} className="w-full h-96 glass-panel border-white/5 animate-pulse" />
+              <div key={n} className="w-full h-96 card-standard border-white/5 animate-pulse" />
             ))}
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch">
             {packages.map((pack) => {
-              const isPopular = pack.title.toLowerCase().includes("product");
+              const isPremium = pack.title.toLowerCase().includes("product");
               return (
-                <motion.div
+                <div
                   key={pack.id}
-                  whileHover={{ y: -8 }}
-                  className={`glass-panel p-8 flex flex-col h-full relative overflow-hidden ${
-                    isPopular
-                      ? "border-accent-cyan/30 shadow-[0_15px_35px_-10px_rgba(0,229,255,0.15)] bg-accent-cyan/[0.01]"
-                      : "border-white/5"
+                  className={`flex flex-col h-full relative overflow-hidden ${
+                    isPremium ? "card-premium p-8" : "card-pricing p-8"
                   }`}
                 >
-                  {isPopular && (
-                    <span className="absolute top-0 right-0 bg-gradient-to-l from-accent-cyan to-accent-purple text-primary-bg text-[10px] font-black tracking-widest uppercase py-1 px-4 rounded-bl-lg font-outfit shadow-md">
-                      Popular Choice
+                  {isPremium && (
+                    <span className="absolute top-0 right-0 bg-[#FFB020] text-primary-bg text-[10px] font-black tracking-widest uppercase py-1.5 px-4 rounded-bl-lg font-space shadow-md">
+                      Most Popular
                     </span>
                   )}
 
-                  <h3 className="text-2xl font-black font-outfit text-white">
+                  <h3 className="text-2xl font-black font-space text-white">
                     {pack.title}
                   </h3>
-                  <p className="text-sm text-gray-400 mt-2 min-h-[40px] leading-relaxed">
+                  <p className={`text-sm mt-2 min-h-[40px] leading-relaxed ${isPremium ? "text-white/80" : "text-text-muted"}`}>
                     {pack.description}
                   </p>
 
                   <div className="my-6">
-                    <span className="text-4xl font-black font-outfit text-white tracking-tight">
+                    <span className="text-4xl font-black font-space text-white tracking-tight">
                       {pack.price}
                     </span>
-                    <span className="text-xs text-gray-500 font-semibold uppercase tracking-wider ml-1">
+                    <span className={`text-xs uppercase tracking-wider ml-1 font-semibold ${isPremium ? "text-white/60" : "text-text-disabled"}`}>
                       / Flat Rate
                     </span>
                   </div>
 
                   {/* Features List */}
-                  <ul className="space-y-3.5 mb-8 flex-grow border-t border-white/5 pt-6">
+                  <ul className="space-y-3.5 mb-8 flex-grow border-t border-white/10 pt-6">
                     {pack.features.split("\n").map((feature, idx) => (
-                      <li key={idx} className="flex items-start gap-2.5 text-sm text-gray-300">
-                        <Check className="w-4 h-4 text-accent-cyan shrink-0 mt-0.5" />
+                      <li key={idx} className="flex items-start gap-2.5 text-sm text-white">
+                        <Check className={`w-4 h-4 shrink-0 mt-0.5 ${isPremium ? "text-white" : "text-accent-cyan"}`} />
                         <span>{feature.trim()}</span>
                       </li>
                     ))}
@@ -171,15 +168,15 @@ export default function PricingSection() {
 
                   <button
                     onClick={() => handleCtaClick(pack)}
-                    className={`ripple-btn w-full py-4 rounded-full font-bold text-sm tracking-wider uppercase transition-all duration-300 ${
-                      isPopular
-                        ? "bg-gradient-to-r from-accent-cyan to-accent-purple text-primary-bg shadow-[0_0_20px_rgba(0,229,255,0.35)]"
-                        : "glass-panel border-white/10 hover:border-accent-cyan/30 text-white"
-                    }`}
+                    className={
+                      isPremium
+                        ? "btn-primary ripple-fx w-full !bg-white !text-primary-bg hover:!bg-white/90"
+                        : "btn-primary ripple-fx w-full"
+                    }
                   >
                     Get This Package
                   </button>
-                </motion.div>
+                </div>
               );
             })}
           </div>
@@ -199,11 +196,11 @@ export default function PricingSection() {
               initial={{ scale: 0.9, y: 15 }}
               animate={{ scale: 1, y: 0 }}
               exit={{ scale: 0.9, y: 15 }}
-              className="relative w-full max-w-md glass-panel bg-secondary-bg/95 border-white/10 p-8 shadow-2xl rounded-2xl overflow-hidden"
+              className="relative w-full max-w-md card-standard bg-secondary-bg/95 border-white/10 p-8 shadow-2xl rounded-2xl overflow-hidden"
             >
               <button
                 onClick={() => setSelectedPackage(null)}
-                className="absolute top-4 right-4 p-2 rounded-full hover:bg-white/5 text-gray-400 hover:text-white transition-colors"
+                className="absolute top-4 right-4 p-2 rounded-full hover:bg-white/5 text-text-muted hover:text-white transition-colors cursor-pointer"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -212,18 +209,18 @@ export default function PricingSection() {
                 <>
                   <div className="flex items-center gap-2 text-accent-cyan mb-2">
                     <Sparkles className="w-4.5 h-4.5 text-accent-cyan animate-pulse" />
-                    <span className="text-[10px] font-extrabold tracking-widest uppercase">Lead Funnel Pipeline</span>
+                    <span className="text-[10px] font-extrabold tracking-widest uppercase font-space">Lead Funnel Pipeline</span>
                   </div>
-                  <h3 className="text-2xl font-black font-outfit text-white">
+                  <h3 className="text-2xl font-black font-space text-white">
                     Request {selectedPackage.title}
                   </h3>
-                  <p className="text-xs text-gray-400 mt-1">
+                  <p className="text-xs text-text-muted mt-1">
                     Fill out this 15-second form. Submitting will register your inquiry in our CRM and trigger automated next-step details to your phone.
                   </p>
 
                   <form onSubmit={handleSubmit} className="space-y-4 mt-6">
                     <div>
-                      <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1.5">
+                      <label className="block text-xs font-semibold text-text-muted uppercase tracking-wider mb-1.5 font-space">
                         Full Name <span className="text-accent-cyan">*</span>
                       </label>
                       <input
@@ -232,12 +229,12 @@ export default function PricingSection() {
                         placeholder="John Doe"
                         value={name}
                         onChange={(e) => setName(e.target.value)}
-                        className="w-full glass-input"
+                        className="input-field"
                       />
                     </div>
 
                     <div>
-                      <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1.5">
+                      <label className="block text-xs font-semibold text-text-muted uppercase tracking-wider mb-1.5 font-space">
                         WhatsApp Phone Number <span className="text-accent-cyan">*</span>
                       </label>
                       <input
@@ -246,30 +243,30 @@ export default function PricingSection() {
                         placeholder="+1555123456"
                         value={phone}
                         onChange={(e) => setPhone(e.target.value)}
-                        className="w-full glass-input"
+                        className="input-field"
                       />
-                      <span className="text-[10px] text-gray-500 mt-1 block">
+                      <span className="text-[10px] text-text-disabled mt-1 block">
                         Include country code without spaces (e.g. +15551234567)
                       </span>
                     </div>
 
                     <div>
-                      <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1.5">
-                        Email Address <span className="text-gray-500">(Optional)</span>
+                      <label className="block text-xs font-semibold text-text-muted uppercase tracking-wider mb-1.5 font-space">
+                        Email Address <span className="text-text-disabled">(Optional)</span>
                       </label>
                       <input
                         type="email"
                         placeholder="john@example.com"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
-                        className="w-full glass-input"
+                        className="input-field"
                       />
                     </div>
 
                     <button
                       type="submit"
                       disabled={formSubmitting}
-                      className="ripple-btn w-full mt-6 py-4 rounded-xl bg-gradient-to-r from-accent-cyan to-accent-purple text-primary-bg font-extrabold text-sm tracking-wider uppercase flex items-center justify-center gap-2 shadow-[0_0_15px_rgba(0,229,255,0.2)] disabled:opacity-50"
+                      className="btn-primary ripple-fx w-full mt-6"
                     >
                       {formSubmitting ? (
                         <>
@@ -278,7 +275,7 @@ export default function PricingSection() {
                         </>
                       ) : (
                         <>
-                          <Send className="w-4 h-4" />
+                          <Send className="w-4 h-4 text-[#0B0F1A]" />
                           Initialize Project
                         </>
                       )}
@@ -292,10 +289,10 @@ export default function PricingSection() {
                     <Check className="w-8 h-8" />
                   </div>
 
-                  <h3 className="text-2xl font-black font-outfit text-white">
+                  <h3 className="text-2xl font-black font-space text-white">
                     Inquiry Confirmed!
                   </h3>
-                  <p className="text-sm text-gray-400 mt-2 leading-relaxed">
+                  <p className="text-sm text-text-muted mt-2 leading-relaxed">
                     Hi <strong className="text-white">{name}</strong>, your request for the <strong className="text-white">{selectedPackage.title}</strong> package was saved. We've initiated a welcome package via WhatsApp to your number.
                   </p>
 
@@ -305,7 +302,7 @@ export default function PricingSection() {
                         href={chatLink}
                         target="_blank"
                         rel="noreferrer"
-                        className="ripple-btn w-full py-4 rounded-xl bg-accent-green text-primary-bg font-extrabold text-sm uppercase flex items-center justify-center gap-2 shadow-[0_0_15px_rgba(37,211,102,0.25)]"
+                        className="btn-whatsapp ripple-fx w-full py-4 text-sm uppercase flex items-center justify-center gap-2"
                       >
                         <MessageSquare className="w-5 h-5" />
                         Chat Directly via WhatsApp
@@ -314,7 +311,7 @@ export default function PricingSection() {
 
                     <button
                       onClick={() => setSelectedPackage(null)}
-                      className="ripple-btn w-full py-3 rounded-xl glass-panel border-white/5 hover:border-white/10 text-gray-400 hover:text-white text-xs font-semibold uppercase tracking-wider"
+                      className="btn-secondary ripple-fx w-full py-3 text-xs uppercase"
                     >
                       Return to Showcase
                     </button>

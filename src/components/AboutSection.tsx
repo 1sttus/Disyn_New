@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Briefcase, GraduationCap, Compass, Layers, CheckCircle } from "lucide-react";
+import { Briefcase, GraduationCap, Layers } from "lucide-react";
 
 const experience = [
   {
@@ -46,19 +46,6 @@ const skills = [
 ];
 
 export default function AboutSection() {
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: { staggerChildren: 0.2 },
-    },
-  };
-
-  const itemVariants = {
-    hidden: { y: 30, opacity: 0 },
-    visible: { y: 0, opacity: 1, transition: { duration: 0.6 } },
-  };
-
   return (
     <section id="about" className="py-24 relative overflow-hidden bg-secondary-bg/50">
       <div className="absolute inset-0 pointer-events-none">
@@ -69,7 +56,7 @@ export default function AboutSection() {
         {/* Section Header */}
         <div className="text-center mb-16">
           <span className="text-xs font-bold tracking-widest text-accent-cyan uppercase">CURRICULUM VITAE</span>
-          <h2 className="text-3xl md:text-5xl font-black font-outfit mt-2 text-white">
+          <h2 className="text-3xl md:text-5xl font-black font-space mt-2 text-text-primary">
             THE CREATIVE JOURNEY
           </h2>
           <div className="w-12 h-1 bg-gradient-to-r from-accent-cyan to-accent-purple mx-auto mt-4 rounded-full" />
@@ -78,7 +65,7 @@ export default function AboutSection() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
           {/* Left Column: Experience Timeline */}
           <div className="lg:col-span-7">
-            <h3 className="text-xl font-bold font-outfit text-white mb-8 flex items-center gap-2">
+            <h3 className="text-xl font-bold font-space text-text-primary mb-8 flex items-center gap-2">
               <Briefcase className="w-5 h-5 text-accent-cyan" />
               Work History
             </h3>
@@ -96,13 +83,13 @@ export default function AboutSection() {
                   {/* Timeline bullet indicator */}
                   <span className="absolute -left-[35px] top-1.5 w-4 h-4 rounded-full bg-primary-bg border-2 border-accent-cyan group-hover:bg-accent-cyan group-hover:shadow-[0_0_10px_rgba(0,229,255,0.8)] transition-all" />
                   
-                  <div className="glass-panel p-6 border-white/5 hover:border-accent-cyan/20">
+                  <div className="card-standard p-6 border-white/5 hover:border-accent-cyan/20">
                     <span className="text-xs font-semibold text-accent-cyan">{item.duration}</span>
-                    <h4 className="text-lg font-bold font-outfit text-white mt-1 group-hover:text-glow-cyan transition-all">
+                    <h4 className="text-lg font-bold font-space text-text-primary mt-1 group-hover:text-glow-cyan transition-all">
                       {item.role}
                     </h4>
-                    <p className="text-sm font-medium text-gray-400 mt-0.5">{item.company}</p>
-                    <p className="text-sm text-gray-400 mt-3 leading-relaxed">{item.desc}</p>
+                    <p className="text-sm font-medium text-text-muted mt-0.5">{item.company}</p>
+                    <p className="text-sm text-text-secondary mt-3 leading-relaxed">{item.desc}</p>
                   </div>
                 </motion.div>
               ))}
@@ -113,16 +100,16 @@ export default function AboutSection() {
           <div className="lg:col-span-5 space-y-12">
             {/* Skills Progress Bars */}
             <div>
-              <h3 className="text-xl font-bold font-outfit text-white mb-8 flex items-center gap-2">
+              <h3 className="text-xl font-bold font-space text-text-primary mb-8 flex items-center gap-2">
                 <Layers className="w-5 h-5 text-accent-cyan" />
                 Technical Mastery
               </h3>
 
-              <div className="space-y-6 glass-panel p-6 border-white/5">
+              <div className="space-y-6 card-standard p-6 border-white/5">
                 {skills.map((skill, idx) => (
                   <div key={idx} className="space-y-2">
                     <div className="flex justify-between text-sm">
-                      <span className="font-semibold text-gray-300">{skill.name}</span>
+                      <span className="font-semibold text-text-secondary">{skill.name}</span>
                       <span className="font-bold text-accent-cyan">{skill.percentage}%</span>
                     </div>
                     <div className="w-full h-2 bg-white/5 rounded-full overflow-hidden">
@@ -141,7 +128,7 @@ export default function AboutSection() {
 
             {/* Education Timeline */}
             <div>
-              <h3 className="text-xl font-bold font-outfit text-white mb-8 flex items-center gap-2">
+              <h3 className="text-xl font-bold font-space text-text-primary mb-8 flex items-center gap-2">
                 <GraduationCap className="w-5 h-5 text-accent-purple" />
                 Education & Accreditations
               </h3>
@@ -154,15 +141,15 @@ export default function AboutSection() {
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.5, delay: idx * 0.1 }}
-                    className="glass-panel p-5 border-white/5 hover:border-accent-purple/20 glass-panel-purple flex gap-4"
+                    className="card-standard p-5 border-white/5 hover:border-accent-purple/20 flex gap-4"
                   >
                     <div className="p-2 rounded-lg bg-accent-purple/10 text-accent-purple h-fit">
                       <GraduationCap className="w-5 h-5" />
                     </div>
                     <div>
                       <span className="text-xs text-accent-purple font-semibold">{item.year}</span>
-                      <h4 className="text-base font-bold text-white mt-0.5">{item.degree}</h4>
-                      <p className="text-xs text-gray-400">{item.school}</p>
+                      <h4 className="text-base font-bold text-text-primary mt-0.5">{item.degree}</h4>
+                      <p className="text-xs text-text-muted">{item.school}</p>
                     </div>
                   </motion.div>
                 ))}
