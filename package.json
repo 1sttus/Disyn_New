@@ -8,6 +8,11 @@
     "start": "next start",
     "lint": "eslint"
   },
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "postinstall": "prisma generate"
+  },
   "dependencies": {
     "@prisma/client": "5.22.0",
     "bcryptjs": "^3.0.3",
