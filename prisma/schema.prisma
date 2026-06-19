@@ -1,0 +1,61 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  name      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Project {
+  id          String   @id @default(cuid())
+  title       String
+  description String
+  category    String   // "Graphic Design" | "UI/UX" | "Web Development" | "AI Projects"
+  imageUrl    String
+  problem     String
+  solution    String
+  impact      String
+  tags        String   // Comma-separated tags (e.g., "React,NextJS,Tailwind")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Package {
+  id          String   @id @default(cuid())
+  title       String
+  description String
+  price       String
+  features    String   // Newline-separated features
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Lead {
+  id          String   @id @default(cuid())
+  name        String
+  phone       String
+  email       String?
+  packageName String
+  packageId   String?
+  status      String   @default("new") // "new" | "contacted" | "closed"
+  notes       String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model AnalyticsLog {
+  id           String   @id @default(cuid())
+  eventType    String   // "visit" | "click" | "conversion"
+  eventDetails String?  // Optional text details
+  timestamp    DateTime @default(now())
+}
