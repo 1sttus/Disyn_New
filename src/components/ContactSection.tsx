@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Send, Mail, MapPin, Phone, Loader2, Check } from "lucide-react";
+import { Send, Mail, MapPin, Phone, MessageSquare, Loader2, Check } from "lucide-react";
 
 export default function ContactSection() {
   const [name, setName] = useState("");
@@ -107,8 +107,11 @@ export default function ContactSection() {
         <div className="text-center mb-16">
           <span className="text-xs font-bold tracking-widest text-accent-cyan uppercase">CONNECT WITH US</span>
           <h2 className="text-3xl md:text-5xl font-black font-space mt-2 text-white">
-            START YOUR ENGINE
+            Let’s build something intentional
           </h2>
+          <p className="text-sm text-text-secondary mt-3 max-w-2xl mx-auto">
+            If you’re looking for design that goes beyond visuals and actually moves your business forward, we should talk.
+          </p>
           <div className="w-12 h-1 bg-gradient-to-r from-accent-cyan to-accent-purple mx-auto mt-4 rounded-full" />
         </div>
 
@@ -181,7 +184,7 @@ export default function ContactSection() {
           </div>
 
           {/* Right Column: Contact Form */}
-          <div className="lg:col-span-7 card-standard p-8 border-white/5 bg-secondary-bg/25">
+          <div className="lg:col-span-7 card-standard p-8 border-white/5 bg-secondary-bg/25 flex flex-col justify-between">
             {success ? (
               <div className="flex flex-col items-center justify-center text-center h-full py-12">
                 <div className="w-16 h-16 rounded-full bg-accent-cyan/15 text-accent-cyan border border-accent-cyan/20 flex items-center justify-center mb-6 animate-bounce">
@@ -258,23 +261,43 @@ export default function ContactSection() {
                   />
                 </div>
 
-                <button
-                  type="submit"
-                  disabled={loading}
-                  className="btn-primary ripple-fx w-full py-4 flex items-center justify-center gap-2"
-                >
-                  {loading ? (
-                    <>
-                      <Loader2 className="w-5 h-5 animate-spin" />
-                      Saving lead details...
-                    </>
-                  ) : (
-                    <>
-                      <Send className="w-4 h-4 text-[#0B0F1A]" />
-                      Submit Project Inquiry
-                    </>
-                  )}
-                </button>
+                <div className="flex flex-col gap-4 mt-6">
+                  {/* Start a Project (Submit Form) */}
+                  <button
+                    type="submit"
+                    disabled={loading}
+                    className="btn-primary ripple-fx w-full py-4 flex items-center justify-center gap-2 font-bold"
+                  >
+                    {loading ? (
+                      <>
+                        <Loader2 className="w-5 h-5 animate-spin" />
+                        Saving lead details...
+                      </>
+                    ) : (
+                      <>
+                        <Send className="w-4 h-4 text-[#0B0F1A]" />
+                        Start a Project
+                      </>
+                    )}
+                  </button>
+
+                  {/* Message on WhatsApp */}
+                  <a
+                    href={`https://wa.me/${process.env.WHATSAPP_ADMIN_PHONE || "1234567890"}?text=${encodeURIComponent("Hi Disyn! I'm interested in starting a design or AI system project with you.")}`}
+                    target="_blank"
+                    rel="noreferrer"
+                    onClick={() => trackSocialClick("WhatsApp Direct")}
+                    className="btn-whatsapp ripple-fx w-full py-4 flex items-center justify-center gap-2 font-bold"
+                  >
+                    <MessageSquare className="w-5 h-5" />
+                    Message on WhatsApp
+                  </a>
+                </div>
+
+                {/* Scarcity Note */}
+                <p className="text-[10px] text-text-disabled text-center mt-4 tracking-wide">
+                  Serious inquiries only. I work best with people who value clarity, quality, and execution.
+                </p>
               </form>
             )}
           </div>

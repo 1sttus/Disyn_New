@@ -28,27 +28,26 @@ async function main() {
   // 2. Seed Default Pricing Packages
   const packages = [
     {
-      title: "Brand Launch",
-      description: "Complete design identity & brand architecture for emerging startups.",
+      title: "Starter Brand System",
+      description: "For individuals and small brands ready to look professional.",
       price: "$1,500",
-      features: "Logo Design Suite\nTypography & Guidelines\nSocial Media Kit\nCreative Direction (2 Weeks)\nReady in 7 Days",
+      features: "Logo direction\nBasic identity system\nSocial media kit",
     },
     {
-      title: "Product Experience",
-      description: "High-conversion UI/UX + custom web application development.",
+      title: "Pro Brand + Website System",
+      description: "For serious businesses ready to scale online presence.",
       price: "$3,200",
-      features: "Figma Interactive Mockup\nMobile-Responsive Next.js Code\nSEO Optimization\nFramer Motion Micro-animations\n3 Weeks Development Support",
+      features: "Full brand identity\nWebsite UI/UX design\nConversion-focused structure",
     },
     {
-      title: "AI Creative System",
-      description: "AI-powered web automation and asset generation pipeline.",
+      title: "Premium Digital System",
+      description: "For brands that want dominance, not visibility.",
       price: "$5,000",
-      features: "Stable Diffusion API Integration\nCustom Image Models training\nNext.js SaaS Dashboard UI\nStripe Payment Integration\nFull Architecture & Tech Handoff",
+      features: "Brand identity system\nHigh-converting website\nUI/UX product design\nStrategy consultation",
     },
   ];
 
   for (const pkg of packages) {
-    // Look up by title or recreate
     const existing = await prisma.package.findFirst({
       where: { title: pkg.title },
     });

@@ -78,13 +78,15 @@ export default function PortfolioSection() {
 
       <div className="max-w-6xl mx-auto px-6 relative z-10">
         {/* Section Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-12">
-          <div>
-            <span className="text-xs font-bold tracking-widest text-accent-cyan uppercase">PROJECT SHOWCASE</span>
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-8">
+          <div className="max-w-2xl">
+            <span className="text-xs font-bold tracking-widest text-accent-cyan uppercase">PORTFOLIO</span>
             <h2 className="text-3xl md:text-5xl font-black font-space mt-2 text-text-primary">
-              CRAFTED SOLUTIONS
+              Selected Work
             </h2>
-            <div className="w-12 h-1 bg-gradient-to-r from-accent-cyan to-accent-purple mt-4 rounded-full" />
+            <p className="text-sm text-text-secondary mt-3 leading-relaxed">
+              A collection of projects where design meets intention — not random visuals, but structured problem-solving.
+            </p>
           </div>
 
           {/* Filters List */}
@@ -103,6 +105,14 @@ export default function PortfolioSection() {
               </button>
             ))}
           </div>
+        </div>
+
+        {/* Supporting Line */}
+        <div className="flex items-center gap-2 mb-12 py-3 px-4 rounded-xl bg-accent-cyan/5 border border-accent-cyan/15 w-fit">
+          <Sparkles className="w-4 h-4 text-accent-cyan" />
+          <span className="text-xs font-semibold text-accent-cyan font-space uppercase tracking-wider">
+            Each project is built around real goals: Increase engagement • Improve clarity • Drive conversion
+          </span>
         </div>
 
         {/* Grid Layout */}
@@ -125,16 +135,15 @@ export default function PortfolioSection() {
           >
             <AnimatePresence mode="popLayout">
               {filteredProjects.map((project, idx) => {
-                // Feature the second project in the listing (AlphaGen Interface)
                 const isFeatured = idx === 1;
                 return (
                   <motion.div
                     key={project.id}
                     layout
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0, scale: 0.9 }}
-                    transition={{ duration: 0.4 }}
+                    initial={{ opacity: 0, y: 50 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, amount: 0.3 }}
+                    transition={{ duration: 0.5 }}
                     className={`group relative overflow-hidden flex flex-col h-full ${
                       isFeatured ? "card-featured" : "card-standard"
                     }`}

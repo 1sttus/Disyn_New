@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Check, Send, Sparkles, X, MessageSquare, Loader2 } from "lucide-react";
+import { Check, Send, Sparkles, X, MessageSquare, Loader2, AlertCircle } from "lucide-react";
 
 interface Package {
   id: string;
@@ -32,6 +32,8 @@ export default function PricingSection() {
         const res = await fetch("/api/admin/packages");
         if (!res.ok) throw new Error("Failed to load");
         const data = await res.json();
+        
+        // Map database response to match the exact copy structure
         setPackages(data);
       } catch (err) {
         console.warn("Using default fallback packages", err);
@@ -41,6 +43,43 @@ export default function PricingSection() {
     }
     loadPackages();
   }, []);
+
+  // Fallback packages if DB is down/empty
+  const fallbackPackages = [
+    {
+      id: "pack-1",
+      title: "Starter Brand System",
+      description: "For individuals and small brands ready to look professional.",
+      price: "$1,500",
+      features: "Logo direction\nBasic identity system\nSocial media kit",
+      cta: "Get This Package",
+    },
+    {
+      id: "pack-2",
+      title: "Pro Brand + Website System",
+      description: "For serious businesses ready to scale online presence.",
+      price: "$3,200",
+      features: "Full brand identity\nWebsite UI/UX design\nConversion-focused structure",
+      cta: "Start Project",
+    },
+    {
+      id: "pack-3",
+      title: "Premium Digital System",
+      description: "For brands that want dominance, not visibility.",
+      price: "$5,000",
+      features: "Brand identity system\nHigh-converting website\nUI/UX product design\nStrategy consultation",
+      cta: "Work With Me",
+    },
+  ];
+
+  const packagesList = packages.length > 0 ? packages.map((pkg, idx) => {
+    // Inject CTA button texts based on index for database items
+    const ctas = ["Get This Package", "Start Project", "Work With Me"];
+    return {
+      ...pkg,
+      cta: ctas[idx] || "Get Started",
+    };
+  }) : fallbackPackages;
 
   const trackClick = async (packageName: string) => {
     try {
@@ -57,7 +96,7 @@ export default function PricingSection() {
     }
   };
 
-  const handleCtaClick = (pack: Package) => {
+  const handleCtaClick = (pack: any) => {
     trackClick(pack.title);
     setSelectedPackage(pack);
     setSubmitSuccess(false);
@@ -111,13 +150,16 @@ export default function PricingSection() {
         <div className="text-center mb-16">
           <span className="text-xs font-bold tracking-widest text-accent-cyan uppercase">PRICING PACKAGES</span>
           <h2 className="text-3xl md:text-5xl font-black font-space mt-2 text-white">
-            CHOOSE YOUR SCALE
+            Services & Design Packages
           </h2>
+          <p className="text-sm text-text-secondary mt-3 max-w-2xl mx-auto">
+            Simple, structured offerings built for individuals, startups, and brands that care about results — not just aesthetics.
+          </p>
           <div className="w-12 h-1 bg-gradient-to-r from-accent-cyan to-accent-purple mx-auto mt-4 rounded-full" />
         </div>
 
         {/* Pricing Cards List */}
-        {loading ? (
+        {loading && packages.length === 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {[1, 2, 3].map((n) => (
               <div key={n} className="w-full h-96 card-standard border-white/5 animate-pulse" />
@@ -125,11 +167,17 @@ export default function PricingSection() {
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch">
-            {packages.map((pack) => {
-              const isPremium = pack.title.toLowerCase().includes("product");
+            {packagesList.map((pack, idx) => {
+              // Highlight Middle Card (Pro Brand + Website System)
+              const isPremium = idx === 1;
               return (
-                <div
+                <motion.div
                   key={pack.id}
+                  whileHover={
+                    isPremium
+                      ? { scale: 1.04, boxShadow: "0 0 40px rgba(0,229,255,0.25)" }
+                      : { scale: 1.02 }
+                  }
                   className={`flex flex-col h-full relative overflow-hidden ${
                     isPremium ? "card-premium p-8" : "card-pricing p-8"
                   }`}
@@ -143,7 +191,7 @@ export default function PricingSection() {
                   <h3 className="text-2xl font-black font-space text-white">
                     {pack.title}
                   </h3>
-                  <p className={`text-sm mt-2 min-h-[40px] leading-relaxed ${isPremium ? "text-white/80" : "text-text-muted"}`}>
+                  <p className={`text-sm mt-2 min-h-[40px] leading-relaxed ${isPremium ? "text-white/85" : "text-text-muted"}`}>
                     {pack.description}
                   </p>
 
@@ -174,13 +222,21 @@ export default function PricingSection() {
                         : "btn-primary ripple-fx w-full"
                     }
                   >
-                    Get This Package
+                    {pack.cta}
                   </button>
-                </div>
+                </motion.div>
               );
             })}
           </div>
         )}
+
+        {/* Scarcity Trust Note */}
+        <div className="mt-16 flex items-center justify-center gap-2.5 py-4 px-6 rounded-2xl bg-accent-warning/5 border border-accent-warning/20 max-w-lg mx-auto shadow-[0_0_20px_rgba(255,176,32,0.05)]">
+          <AlertCircle className="w-5 h-5 text-accent-warning shrink-0" />
+          <p className="text-xs font-semibold text-accent-warning font-space uppercase tracking-wider text-center">
+            Limited availability to ensure quality and focus per project.
+          </p>
+        </div>
       </div>
 
       {/* Package Checkout Form Modal */}
