@@ -15,6 +15,7 @@ interface Project {
   solution: string;
   impact: string;
   tags: string;
+  status?: string;
 }
 
 const categories = ["All", "Graphic Design", "UI/UX", "Web Development", "AI Projects"];

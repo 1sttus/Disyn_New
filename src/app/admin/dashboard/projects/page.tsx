@@ -84,17 +84,21 @@ export default function ProjectsManager() {
     const newProjectStatus = new URLSearchParams(window.location.search).get("new");
     if (newProjectStatus !== "published" && newProjectStatus !== "upcoming") return;
 
-    setEditingProject(null);
-    setTitle("");
-    setDescription("");
-    setCategory("Graphic Design");
-    setImageUrl("");
-    setProblem("");
-    setSolution("");
-    setImpact("");
-    setTags("");
-    setStatus(newProjectStatus);
-    setShowModal(true);
+    const timer = window.setTimeout(() => {
+      setEditingProject(null);
+      setTitle("");
+      setDescription("");
+      setCategory("Graphic Design");
+      setImageUrl("");
+      setProblem("");
+      setSolution("");
+      setImpact("");
+      setTags("");
+      setStatus(newProjectStatus);
+      setShowModal(true);
+    }, 0);
+
+    return () => window.clearTimeout(timer);
   }, []);
 
   const openAddModal = () => {
