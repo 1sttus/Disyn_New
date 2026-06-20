@@ -80,6 +80,23 @@ export default function ProjectsManager() {
     };
   }, []);
 
+  useEffect(() => {
+    const newProjectStatus = new URLSearchParams(window.location.search).get("new");
+    if (newProjectStatus !== "published" && newProjectStatus !== "upcoming") return;
+
+    setEditingProject(null);
+    setTitle("");
+    setDescription("");
+    setCategory("Graphic Design");
+    setImageUrl("");
+    setProblem("");
+    setSolution("");
+    setImpact("");
+    setTags("");
+    setStatus(newProjectStatus);
+    setShowModal(true);
+  }, []);
+
   const openAddModal = () => {
     setEditingProject(null);
     setTitle("");

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import type { Variants } from "framer-motion";
 import Link from "next/link";
@@ -14,12 +14,32 @@ const navItems = [
 ];
 
 const mobileNavItems = [
-  { label: "Home", href: "#home" },
-  { label: "Work", href: "#portfolio" },
-  { label: "Value", href: "#value" },
-  { label: "Packages", href: "#pricing" },
-  { label: "Contact", href: "#contact" },
+  { label: "Home", symbol: "H", href: "#home" },
+  { label: "Work", symbol: "W", href: "#portfolio" },
+  { label: "Value", symbol: "V", href: "#value" },
+  { label: "Packages", symbol: "P", href: "#pricing" },
+  { label: "Contact", symbol: "C", href: "#contact" },
 ];
+
+type ProjectCard = {
+  id?: string;
+  title: string;
+  category: string;
+  problem: string;
+  solution: string;
+  outcome: string;
+  status: string;
+};
+
+type AdminProject = {
+  id: string;
+  title: string;
+  category: string;
+  problem: string;
+  solution: string;
+  impact: string;
+  status?: string;
+};
 
 const focusAreas = [
   "Brand systems",
@@ -58,7 +78,7 @@ const valueBlocks = [
   },
 ];
 
-const projects = [
+const fallbackProjects: ProjectCard[] = [
   {
     title: "Church Conference Visual System",
     category: "Church Graphic Design",
@@ -100,6 +120,20 @@ const projects = [
     status: "Upcoming",
   },
 ];
+
+function mapAdminProject(project: AdminProject): ProjectCard {
+  const status = project.status === "upcoming" ? "Upcoming" : "Selected Sample";
+
+  return {
+    id: project.id,
+    title: project.title,
+    category: project.category,
+    problem: project.problem,
+    solution: project.solution,
+    outcome: project.impact,
+    status,
+  };
+}
 
 const packages = [
   {
@@ -187,7 +221,7 @@ function SectionShell({
           <p className="text-xs font-bold uppercase tracking-[0.28em] text-accent-cyan">
             {eyebrow}
           </p>
-          <h2 className="mt-4 text-3xl font-black leading-tight text-white md:text-5xl">
+          <h2 className="mt-4 text-3xl font-black leading-tight text-[var(--text-primary)] md:text-5xl">
             {title}
           </h2>
         </motion.div>
@@ -199,6 +233,7 @@ function SectionShell({
 
 export default function Home() {
   const heroRef = useRef<HTMLElement>(null);
+  const [adminProjects, setAdminProjects] = useState<ProjectCard[]>([]);
   const { scrollYProgress } = useScroll({
     target: heroRef,
     offset: ["start start", "end start"],
@@ -211,6 +246,16 @@ export default function Home() {
   const orbTwoY = useTransform(scrollYProgress, [0, 1], [0, -90]);
 
   useEffect(() => {
+    const applyTimeTheme = () => {
+      const hour = new Date().getHours();
+      const theme = hour >= 6 && hour < 17 ? "light" : "dark";
+      document.documentElement.dataset.theme = theme;
+      document.documentElement.style.colorScheme = theme;
+    };
+
+    applyTimeTheme();
+    const themeTimer = window.setInterval(applyTimeTheme, 60 * 1000);
+
     async function trackVisit() {
       try {
         await fetch("/api/analytics", {
@@ -227,32 +272,65 @@ export default function Home() {
     }
 
     trackVisit();
+    return () => window.clearInterval(themeTimer);
   }, []);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function loadProjects() {
+      try {
+        const res = await fetch("/api/admin/projects");
+        if (!res.ok) return;
+        const data = (await res.json()) as AdminProject[];
+        const visibleProjects = data
+          .filter((project) => project.status !== "draft")
+          .map(mapAdminProject);
+
+        if (!cancelled && visibleProjects.length > 0) {
+          setAdminProjects(visibleProjects);
+        }
+      } catch {
+        // Curated samples below keep Selected Work visible without a database.
+      }
+    }
+
+    loadProjects();
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const selectedProjects = useMemo(
+    () => (adminProjects.length > 0 ? adminProjects : fallbackProjects),
+    [adminProjects]
+  );
 
   const whatsappUrl = `https://wa.me/${process.env.NEXT_PUBLIC_WHATSAPP_PHONE || "2348083439674"}?text=${encodeURIComponent(
     "Hi Disyn, I am interested in a design, web, or AI systems project."
   )}`;
 
   return (
-    <main className="relative min-h-screen overflow-hidden bg-[#070A12] text-text-primary">
+    <main className="relative min-h-screen overflow-hidden bg-[var(--page-bg)] text-[var(--text-primary)] transition-colors duration-700">
       <div className="pointer-events-none fixed inset-0 z-0">
         <motion.div
           style={{ y: orbOneY }}
-          className="absolute left-[-10%] top-[12%] h-[24rem] w-[24rem] rounded-full bg-accent-cyan/10 blur-[120px]"
+          className="absolute left-[-10%] top-[12%] h-[24rem] w-[24rem] rounded-full bg-[var(--glow-one)] blur-[120px]"
         />
         <motion.div
           style={{ y: orbTwoY }}
-          className="absolute right-[-8%] top-[42%] h-[28rem] w-[28rem] rounded-full bg-accent-purple/10 blur-[140px]"
+          className="absolute right-[-8%] top-[42%] h-[28rem] w-[28rem] rounded-full bg-[var(--glow-two)] blur-[140px]"
         />
-        <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.025)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.025)_1px,transparent_1px)] bg-[size:72px_72px]" />
+        <div className="absolute inset-0 bg-[var(--page-grid)] bg-[size:72px_72px]" />
       </div>
 
       <header className="fixed left-0 top-0 z-50 w-full px-4 py-4 md:px-8">
-        <nav className="mx-auto flex max-w-6xl items-center justify-between rounded-full border border-white/10 bg-[#070A12]/70 px-5 py-3 backdrop-blur-xl">
+        <nav className="mx-auto flex max-w-6xl items-center justify-between rounded-full border border-[var(--border-soft)] bg-[var(--nav-bg)] px-5 py-3 shadow-2xl shadow-black/10 backdrop-blur-xl transition-colors duration-700">
           <button
             type="button"
             onClick={() => scrollToSection("home")}
-            className="text-sm font-black uppercase tracking-[0.32em] text-white"
+            className="text-sm font-black uppercase tracking-[0.32em] text-[var(--text-primary)]"
           >
             Disyn
           </button>
@@ -261,7 +339,7 @@ export default function Home() {
               <a
                 key={item.href}
                 href={item.href}
-                className="rounded-full px-4 py-2 text-[11px] font-bold uppercase tracking-[0.18em] text-text-muted transition hover:bg-white/5 hover:text-white"
+                className="rounded-full px-4 py-2 text-[11px] font-bold uppercase tracking-[0.18em] text-[var(--text-muted)] transition hover:bg-[var(--surface-hover)] hover:text-[var(--text-primary)]"
               >
                 {item.label}
               </a>
@@ -273,21 +351,23 @@ export default function Home() {
               trackClick("Navigation Hire Me");
               scrollToSection("contact");
             }}
-            className="rounded-full bg-white px-4 py-2 text-[11px] font-black uppercase tracking-[0.18em] text-primary-bg transition hover:scale-[1.03]"
+            className="rounded-full bg-[var(--text-primary)] px-4 py-2 text-[11px] font-black uppercase tracking-[0.18em] text-[var(--page-bg)] transition hover:scale-[1.03]"
           >
             Hire Me
           </button>
         </nav>
       </header>
 
-      <nav className="fixed bottom-4 left-1/2 z-50 flex w-[calc(100%-1.5rem)] -translate-x-1/2 items-center justify-between rounded-full border border-white/10 bg-[#070A12]/70 px-2 py-2 shadow-2xl shadow-black/40 backdrop-blur-xl md:hidden">
+      <nav className="fixed bottom-4 left-1/2 z-50 flex w-[calc(100%-1.5rem)] max-w-md -translate-x-1/2 items-center justify-between rounded-[1.5rem] border border-[var(--border-soft)] bg-[var(--nav-bg)] px-2 py-2 shadow-2xl shadow-black/25 backdrop-blur-xl transition-colors duration-700 md:hidden">
         {mobileNavItems.map((item) => (
           <a
             key={item.href}
             href={item.href}
-            className="rounded-full px-3 py-2 text-[10px] font-black uppercase tracking-[0.12em] text-text-muted transition hover:bg-white/10 hover:text-white"
+            aria-label={item.label}
+            title={item.label}
+            className="flex h-11 w-11 items-center justify-center rounded-full text-sm font-black uppercase tracking-[0.02em] text-[var(--text-muted)] transition hover:bg-[var(--surface-hover)] hover:text-[var(--text-primary)]"
           >
-            {item.label}
+            {item.symbol}
           </a>
         ))}
       </nav>
@@ -306,19 +386,19 @@ export default function Home() {
         >
           <motion.p
             variants={fadeUp}
-            className="mx-auto w-fit rounded-full border border-white/10 bg-white/[0.04] px-4 py-2 text-xs font-bold uppercase tracking-[0.28em] text-accent-cyan"
+            className="mx-auto w-fit rounded-full border border-[var(--border-soft)] bg-[var(--surface-soft)] px-4 py-2 text-xs font-bold uppercase tracking-[0.28em] text-accent-cyan"
           >
             Creative Systems Designer
           </motion.p>
           <motion.h1
             variants={fadeUp}
-            className="mx-auto mt-8 max-w-5xl text-6xl font-black leading-[0.9] text-white md:text-8xl lg:text-9xl"
+            className="mx-auto mt-8 max-w-5xl text-6xl font-black leading-[0.9] text-[var(--text-primary)] md:text-8xl lg:text-9xl"
           >
             Design. Build. Scale.
           </motion.h1>
           <motion.p
             variants={fadeUp}
-            className="mx-auto mt-8 max-w-3xl text-lg font-medium leading-8 text-text-secondary md:text-2xl"
+            className="mx-auto mt-8 max-w-3xl text-lg font-medium leading-8 text-[var(--text-secondary)] md:text-2xl"
           >
             Creative Systems Designer specializing in Brand Design, Graphic Design, UI/UX, Web, and AI systems.
           </motion.p>
@@ -348,12 +428,12 @@ export default function Home() {
                 trackClick("Hero View Selected Work");
                 scrollToSection("portfolio");
               }}
-              className="w-full rounded-full border border-white/15 bg-white/[0.03] px-8 py-4 text-sm font-black uppercase tracking-[0.18em] text-white transition hover:scale-[1.04] hover:bg-white/10 sm:w-auto"
+              className="w-full rounded-full border border-[var(--border-soft)] bg-[var(--surface-soft)] px-8 py-4 text-sm font-black uppercase tracking-[0.18em] text-[var(--text-primary)] transition hover:scale-[1.04] hover:bg-[var(--surface-hover)] sm:w-auto"
             >
               View Selected Work
             </button>
           </motion.div>
-          <motion.p variants={fadeUp} className="mt-7 text-sm text-text-muted">
+          <motion.p variants={fadeUp} className="mt-7 text-sm text-[var(--text-muted)]">
             Available for high-impact design projects and long-term collaborations.
           </motion.p>
         </motion.div>
@@ -363,10 +443,10 @@ export default function Home() {
         id="authority"
         eyebrow="Authority"
         title="Creative work with business intent. Not decoration. Strategy."
-        className="z-10 bg-[#090D16]/70"
+        className="z-10 bg-[var(--section-band)] transition-colors duration-700"
       >
         <div className="mt-12 grid gap-8 lg:grid-cols-[1.15fr_0.85fr]">
-          <motion.p variants={fadeUp} className="text-xl leading-9 text-text-secondary md:text-2xl">
+          <motion.p variants={fadeUp} className="text-xl leading-9 text-[var(--text-secondary)] md:text-2xl">
             Every project is shaped to improve perception, usability, and conversion. The goal is not just to make a brand look better. The goal is to make people understand, trust, and act faster, whether it is a brand identity, church flyer, school campaign, organization design system, website, or product interface.
           </motion.p>
           <motion.div variants={stagger} className="grid gap-3 sm:grid-cols-2">
@@ -374,7 +454,7 @@ export default function Home() {
               <motion.div
                 key={area}
                 variants={fadeUp}
-                className="rounded-2xl border border-white/10 bg-white/[0.035] p-5 text-sm font-bold uppercase tracking-[0.16em] text-white"
+                className="rounded-2xl border border-[var(--border-soft)] bg-[var(--surface-soft)] p-5 text-sm font-bold uppercase tracking-[0.16em] text-[var(--text-primary)]"
               >
                 {area}
               </motion.div>
@@ -390,12 +470,12 @@ export default function Home() {
               key={block.title}
               variants={fadeUp}
               whileHover={{ y: -8, scale: 1.015 }}
-              className="rounded-[2rem] border border-white/10 bg-white/[0.04] p-7 shadow-2xl shadow-black/20 transition"
+              className="rounded-[2rem] border border-[var(--border-soft)] bg-[var(--surface-soft)] p-7 shadow-2xl shadow-black/10 transition"
             >
               <p className="text-xs font-black uppercase tracking-[0.22em] text-accent-cyan">
                 {block.title}
               </p>
-              <p className="mt-5 text-base leading-8 text-text-secondary">{block.description}</p>
+              <p className="mt-5 text-base leading-8 text-[var(--text-secondary)]">{block.description}</p>
             </motion.article>
           ))}
         </motion.div>
@@ -405,35 +485,35 @@ export default function Home() {
         id="portfolio"
         eyebrow="Selected Work"
         title="Selected work samples with problem, solution, and outcome."
-        className="z-10 bg-[#090D16]/70"
+        className="z-10 bg-[var(--section-band)] transition-colors duration-700"
       >
         <motion.div variants={stagger} className="mt-12 grid gap-6 lg:grid-cols-3">
-          {projects.map((project) => (
+          {selectedProjects.map((project) => (
             <motion.article
-              key={project.title}
+              key={project.id || project.title}
               variants={fadeUp}
               whileHover={{ y: -10, scale: 1.02 }}
-              className="rounded-[2rem] border border-white/10 bg-[#0D111F]/80 p-7"
+              className="rounded-[2rem] border border-[var(--border-soft)] bg-[var(--card-bg)] p-7 shadow-xl shadow-black/10 transition-colors duration-700"
             >
               <p className="mb-5 flex items-center justify-between gap-3 text-[10px] font-black uppercase tracking-[0.2em] text-accent-cyan">
                 <span>{project.category}</span>
-                <span className="rounded-full border border-white/10 px-3 py-1 text-text-muted">
+                <span className="rounded-full border border-[var(--border-soft)] px-3 py-1 text-[var(--text-muted)]">
                   {project.status}
                 </span>
               </p>
-              <h3 className="text-2xl font-black text-white">{project.title}</h3>
+              <h3 className="text-2xl font-black text-[var(--text-primary)]">{project.title}</h3>
               <div className="mt-8 space-y-6">
                 <div>
-                  <p className="text-xs font-black uppercase tracking-[0.22em] text-text-muted">Problem</p>
-                  <p className="mt-2 text-sm leading-7 text-text-secondary">{project.problem}</p>
+                  <p className="text-xs font-black uppercase tracking-[0.22em] text-[var(--text-muted)]">Problem</p>
+                  <p className="mt-2 text-sm leading-7 text-[var(--text-secondary)]">{project.problem}</p>
                 </div>
                 <div>
-                  <p className="text-xs font-black uppercase tracking-[0.22em] text-text-muted">Solution</p>
-                  <p className="mt-2 text-sm leading-7 text-text-secondary">{project.solution}</p>
+                  <p className="text-xs font-black uppercase tracking-[0.22em] text-[var(--text-muted)]">Solution</p>
+                  <p className="mt-2 text-sm leading-7 text-[var(--text-secondary)]">{project.solution}</p>
                 </div>
                 <div>
                   <p className="text-xs font-black uppercase tracking-[0.22em] text-accent-cyan">Outcome</p>
-                  <p className="mt-2 text-sm leading-7 text-white">{project.outcome}</p>
+                  <p className="mt-2 text-sm leading-7 text-[var(--text-primary)]">{project.outcome}</p>
                 </div>
               </div>
             </motion.article>
@@ -451,7 +531,7 @@ export default function Home() {
               className={`relative rounded-[2rem] border p-7 ${
                 pack.featured
                   ? "border-accent-cyan/45 bg-accent-cyan/[0.09] shadow-[0_0_55px_rgba(0,229,255,0.16)]"
-                  : "border-white/10 bg-white/[0.04]"
+                  : "border-[var(--border-soft)] bg-[var(--surface-soft)]"
               }`}
             >
               {pack.featured && (
@@ -459,12 +539,12 @@ export default function Home() {
                   Recommended
                 </p>
               )}
-              <h3 className="text-2xl font-black text-white">{pack.title}</h3>
-              <p className="mt-3 text-sm leading-7 text-text-secondary">{pack.description}</p>
-              <p className="mt-8 text-4xl font-black text-white">{pack.price}</p>
-              <div className="mt-8 space-y-3 border-t border-white/10 pt-6">
+              <h3 className="text-2xl font-black text-[var(--text-primary)]">{pack.title}</h3>
+              <p className="mt-3 text-sm leading-7 text-[var(--text-secondary)]">{pack.description}</p>
+              <p className="mt-8 text-4xl font-black text-[var(--text-primary)]">{pack.price}</p>
+              <div className="mt-8 space-y-3 border-t border-[var(--border-soft)] pt-6">
                 {pack.features.map((feature) => (
-                  <p key={feature} className="text-sm font-semibold text-text-secondary">
+                  <p key={feature} className="text-sm font-semibold text-[var(--text-secondary)]">
                     {feature}
                   </p>
                 ))}
@@ -478,7 +558,7 @@ export default function Home() {
                 className={`mt-8 w-full rounded-full px-5 py-4 text-xs font-black uppercase tracking-[0.18em] transition hover:scale-[1.03] ${
                   pack.featured
                     ? "bg-white text-primary-bg"
-                    : "border border-white/15 text-white hover:bg-white/10"
+                    : "border border-[var(--border-soft)] text-[var(--text-primary)] hover:bg-[var(--surface-hover)]"
                 }`}
               >
                 Start With This
@@ -502,14 +582,14 @@ export default function Home() {
         viewport={{ once: true, amount: 0.3 }}
         className="relative z-10 px-6 py-24 md:py-32"
       >
-        <div className="mx-auto max-w-4xl rounded-[2.5rem] border border-white/10 bg-white/[0.05] p-8 text-center shadow-2xl shadow-black/30 md:p-14">
+        <div className="mx-auto max-w-4xl rounded-[2.5rem] border border-[var(--border-soft)] bg-[var(--surface-soft)] p-8 text-center shadow-2xl shadow-black/15 md:p-14">
           <motion.p variants={fadeUp} className="text-xs font-bold uppercase tracking-[0.28em] text-accent-cyan">
             Contact
           </motion.p>
-          <motion.h2 variants={fadeUp} className="mt-4 text-4xl font-black leading-tight text-white md:text-6xl">
+          <motion.h2 variants={fadeUp} className="mt-4 text-4xl font-black leading-tight text-[var(--text-primary)] md:text-6xl">
             Let&apos;s build something intentional
           </motion.h2>
-          <motion.p variants={fadeUp} className="mx-auto mt-6 max-w-2xl text-base leading-8 text-text-secondary md:text-lg">
+          <motion.p variants={fadeUp} className="mx-auto mt-6 max-w-2xl text-base leading-8 text-[var(--text-secondary)] md:text-lg">
             If you need a brand, interface, website, or AI workflow that carries business weight, send the project context and the outcome you want to create.
           </motion.p>
           <motion.a
@@ -524,14 +604,14 @@ export default function Home() {
           >
             Contact on WhatsApp
           </motion.a>
-          <motion.p variants={fadeUp} className="mt-7 text-xs font-bold uppercase tracking-[0.18em] text-text-muted">
+          <motion.p variants={fadeUp} className="mt-7 text-xs font-bold uppercase tracking-[0.18em] text-[var(--text-muted)]">
             Serious inquiries only.
           </motion.p>
         </div>
       </motion.section>
 
-      <footer className="relative z-10 border-t border-white/10 px-6 py-8">
-        <div className="mx-auto flex max-w-6xl flex-col gap-4 text-xs font-semibold uppercase tracking-[0.18em] text-text-disabled sm:flex-row sm:items-center sm:justify-between">
+      <footer className="relative z-10 border-t border-[var(--border-soft)] px-6 py-8">
+        <div className="mx-auto flex max-w-6xl flex-col gap-4 text-xs font-semibold uppercase tracking-[0.18em] text-[var(--text-muted)] sm:flex-row sm:items-center sm:justify-between">
           <p>Disyn. Creative systems for clarity, conversion, and scale.</p>
           <Link href="/admin/dashboard" className="transition hover:text-accent-cyan">
             Admin

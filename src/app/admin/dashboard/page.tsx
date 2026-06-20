@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { Users, Eye, BarChart, CheckCircle2, Trash2, Edit3, MessageSquare } from "lucide-react";
+import Link from "next/link";
 
 interface Lead {
   id: string;
@@ -141,6 +142,31 @@ export default function DashboardOverview() {
         <p className="text-sm text-text-secondary">
           Track conversion activity, package selections, and customer follow-up actions.
         </p>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <Link
+          href="/admin/dashboard/projects?new=published"
+          className="card-standard border-white/5 bg-[#0D111F]/50 p-5 hover:border-accent-cyan/30 transition-colors"
+        >
+          <p className="text-xs font-black uppercase tracking-widest text-accent-cyan font-space">
+            Add New Project
+          </p>
+          <p className="mt-2 text-sm text-text-secondary">
+            Publish a fresh selected work sample to the public portfolio.
+          </p>
+        </Link>
+        <Link
+          href="/admin/dashboard/projects?new=upcoming"
+          className="card-standard border-white/5 bg-[#0D111F]/50 p-5 hover:border-accent-warning/30 transition-colors"
+        >
+          <p className="text-xs font-black uppercase tracking-widest text-accent-warning font-space">
+            Add Upcoming Project
+          </p>
+          <p className="mt-2 text-sm text-text-secondary">
+            Create a coming-soon portfolio entry for work in progress.
+          </p>
+        </Link>
       </div>
 
       {/* Stats Grid */}

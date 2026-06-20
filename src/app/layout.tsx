@@ -31,11 +31,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${inter.variable} ${spaceGrotesk.variable} scroll-smooth dark`}>
+    <html lang="en" className={`${inter.variable} ${spaceGrotesk.variable} scroll-smooth`}>
       <head>
         <link rel="icon" href="/favicon.ico" />
       </head>
-      <body className="min-h-screen bg-primary-bg text-gray-100 font-sans antialiased selection:bg-accent-cyan selection:text-primary-bg">
+      <body className="min-h-screen bg-[var(--page-bg)] text-[var(--text-primary)] font-sans antialiased selection:bg-accent-cyan selection:text-primary-bg">
         <Providers>
           {children}
         </Providers>
