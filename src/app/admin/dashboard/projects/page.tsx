@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Plus, Edit2, Trash2, X, Upload, Loader2, Sparkles } from "lucide-react";
+import { Plus, Trash2, X, Upload, Loader2, Sparkles } from "lucide-react";
 import Image from "next/image";
 
 interface Project {
@@ -14,6 +14,7 @@ interface Project {
   solution: string;
   impact: string;
   tags: string;
+  status?: string;
 }
 
 export default function ProjectsManager() {
@@ -32,6 +33,7 @@ export default function ProjectsManager() {
   const [solution, setSolution] = useState("");
   const [impact, setImpact] = useState("");
   const [tags, setTags] = useState("");
+  const [status, setStatus] = useState("published");
 
   const [uploading, setUploading] = useState(false);
 
@@ -51,7 +53,31 @@ export default function ProjectsManager() {
   };
 
   useEffect(() => {
-    loadProjects();
+    let cancelled = false;
+
+    async function loadInitialProjects() {
+      try {
+        const res = await fetch("/api/admin/projects");
+        if (res.ok) {
+          const data = await res.json();
+          if (!cancelled) {
+            setProjects(data);
+          }
+        }
+      } catch (e) {
+        console.error(e);
+      } finally {
+        if (!cancelled) {
+          setLoading(false);
+        }
+      }
+    }
+
+    loadInitialProjects();
+
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   const openAddModal = () => {
@@ -64,6 +90,7 @@ export default function ProjectsManager() {
     setSolution("");
     setImpact("");
     setTags("");
+    setStatus("published");
     setShowModal(true);
   };
 
@@ -77,6 +104,7 @@ export default function ProjectsManager() {
     setSolution(p.solution);
     setImpact(p.impact);
     setTags(p.tags);
+    setStatus(p.status || "published");
     setShowModal(true);
   };
 
@@ -121,6 +149,7 @@ export default function ProjectsManager() {
       solution,
       impact,
       tags,
+      status,
     };
 
     try {
@@ -171,6 +200,7 @@ export default function ProjectsManager() {
           </h1>
           <p className="text-sm text-text-secondary">
             Create, update, or remove projects displaying in your showcase grid.
+            Mark work as published, upcoming, or draft.
           </p>
         </div>
         <button
@@ -209,6 +239,15 @@ export default function ProjectsManager() {
                 />
                 <span className="absolute top-3 left-3 px-2 py-0.5 rounded bg-primary-bg/90 backdrop-blur-sm text-[9px] font-black text-accent-cyan tracking-widest uppercase border border-accent-cyan/10 font-space">
                   {project.category}
+                </span>
+                <span className={`absolute top-3 right-3 px-2 py-0.5 rounded bg-primary-bg/90 backdrop-blur-sm text-[9px] font-black tracking-widest uppercase border font-space ${
+                  project.status === "upcoming"
+                    ? "text-accent-warning border-accent-warning/20"
+                    : project.status === "draft"
+                      ? "text-text-muted border-white/10"
+                      : "text-accent-green border-accent-green/20"
+                }`}>
+                  {project.status || "published"}
                 </span>
               </div>
 
@@ -285,11 +324,30 @@ export default function ProjectsManager() {
                     className="input-field cursor-pointer"
                   >
                     <option value="Graphic Design">Graphic Design</option>
+                    <option value="Brand Design">Brand Design</option>
+                    <option value="Church Graphics">Church Graphics</option>
+                    <option value="School Graphics">School Graphics</option>
+                    <option value="Organization Design">Organization Design</option>
                     <option value="UI/UX">UI/UX</option>
                     <option value="Web Development">Web Development</option>
                     <option value="AI Projects">AI Projects</option>
                   </select>
                 </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-text-muted uppercase tracking-wider mb-1.5 font-space">
+                  Project Status
+                </label>
+                <select
+                  value={status}
+                  onChange={(e) => setStatus(e.target.value)}
+                  className="input-field cursor-pointer"
+                >
+                  <option value="published">Published</option>
+                  <option value="upcoming">Upcoming Project</option>
+                  <option value="draft">Draft</option>
+                </select>
               </div>
 
               <div>

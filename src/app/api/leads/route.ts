@@ -63,7 +63,7 @@ export async function POST(req: Request) {
       message: clientMessage,
     });
 
-    const adminPhone = process.env.WHATSAPP_ADMIN_PHONE || "1234567890";
+    const adminPhone = process.env.WHATSAPP_ADMIN_PHONE || "2348083439674";
     const adminResult = await sendWhatsAppMessage({
       to: adminPhone,
       message: adminMessage,

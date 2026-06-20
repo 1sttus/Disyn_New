@@ -283,7 +283,7 @@ export default function ContactSection() {
 
                   {/* Message on WhatsApp */}
                   <a
-                    href={`https://wa.me/${process.env.WHATSAPP_ADMIN_PHONE || "1234567890"}?text=${encodeURIComponent("Hi Disyn! I'm interested in starting a design or AI system project with you.")}`}
+                    href={`https://wa.me/${process.env.NEXT_PUBLIC_WHATSAPP_PHONE || "2348083439674"}?text=${encodeURIComponent("Hi Disyn! I'm interested in starting a design or AI system project with you.")}`}
                     target="_blank"
                     rel="noreferrer"
                     onClick={() => trackSocialClick("WhatsApp Direct")}

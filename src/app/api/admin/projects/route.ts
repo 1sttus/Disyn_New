@@ -24,6 +24,7 @@ export async function GET() {
         solution: "Designed a sleek dark palette with glowing accents and geometric fonts.",
         impact: "Resulted in a 40% increase in investor brand recall during seed pitch.",
         tags: "Branding,Illustrator,Vector",
+        status: "published",
       },
       {
         id: "mock-2",
@@ -35,6 +36,7 @@ export async function GET() {
         solution: "Created an intuitive, dark-mode data platform using node layout styling.",
         impact: "Reduced customer onboarding support queries by 65%.",
         tags: "Figma,UI/UX,Web App",
+        status: "published",
       },
       {
         id: "mock-3",
@@ -46,6 +48,7 @@ export async function GET() {
         solution: "Coded a reactive Next.js storefront utilizing client state caching and smart contract hooks.",
         impact: "Completed $150k in transaction volume in first 30 days.",
         tags: "NextJS,Solidity,Tailwind",
+        status: "published",
       },
       {
         id: "mock-4",
@@ -57,6 +60,7 @@ export async function GET() {
         solution: "Crafted a model pipeline generating styled graphics via custom Stable Diffusion seeds.",
         impact: "Halved agency concept drafting time from 4 days to 4 hours.",
         tags: "AI,Stable Diffusion,Python",
+        status: "upcoming",
       }
     ]);
   }
@@ -71,7 +75,7 @@ export async function POST(req: Request) {
 
   try {
     const body = await req.json();
-    const { title, description, category, imageUrl, problem, solution, impact, tags } = body;
+    const { title, description, category, imageUrl, problem, solution, impact, tags, status } = body;
 
     if (!title || !description || !category || !imageUrl || !problem || !solution || !impact || !tags) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
@@ -87,6 +91,7 @@ export async function POST(req: Request) {
         solution,
         impact,
         tags,
+        status: status || "published",
       },
     });
 
@@ -105,7 +110,7 @@ export async function PUT(req: Request) {
 
   try {
     const body = await req.json();
-    const { id, title, description, category, imageUrl, problem, solution, impact, tags } = body;
+    const { id, title, description, category, imageUrl, problem, solution, impact, tags, status } = body;
 
     if (!id) {
       return NextResponse.json({ error: "Missing project ID" }, { status: 400 });
@@ -122,6 +127,7 @@ export async function PUT(req: Request) {
         solution,
         impact,
         tags,
+        status,
       },
     });
 

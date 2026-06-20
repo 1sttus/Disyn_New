@@ -13,10 +13,20 @@ const navItems = [
   { label: "Contact", href: "#contact" },
 ];
 
+const mobileNavItems = [
+  { label: "Home", href: "#home" },
+  { label: "Work", href: "#portfolio" },
+  { label: "Value", href: "#value" },
+  { label: "Packages", href: "#pricing" },
+  { label: "Contact", href: "#contact" },
+];
+
 const focusAreas = [
   "Brand systems",
+  "Graphic design",
   "UI/UX systems",
   "Conversion-focused websites",
+  "Church, school, and organization graphics",
   "AI workflows",
 ];
 
@@ -24,7 +34,12 @@ const valueBlocks = [
   {
     title: "Brand Identity Systems",
     description:
-      "Identity foundations, visual direction, and messaging clarity that make a brand feel trusted before the first conversation.",
+      "Logo direction, identity foundations, visual language, and brand materials that make people trust the work before the first conversation.",
+  },
+  {
+    title: "Graphic Design for Institutions",
+    description:
+      "Flyers, campaign visuals, event graphics, and communication materials for churches, schools, organizations, and public-facing programs.",
   },
   {
     title: "High-Converting Websites",
@@ -45,22 +60,44 @@ const valueBlocks = [
 
 const projects = [
   {
+    title: "Church Conference Visual System",
+    category: "Church Graphic Design",
+    problem: "A church program needed a stronger visual language for flyers, social posts, and announcement materials.",
+    solution: "Created a consistent event identity with bold typography, worship-centered layout direction, and reusable graphic templates.",
+    outcome: "A clearer campaign system for digital promotion, Sunday announcements, and printed communication.",
+    status: "Selected Sample",
+  },
+  {
+    title: "School Admission Campaign",
+    category: "School Graphic Design",
+    problem: "A school needed admission materials that parents could understand quickly and share easily.",
+    solution: "Designed flyer, social, and information layouts with cleaner hierarchy and a more credible visual system.",
+    outcome: "A professional campaign direction that made the admission message easier to read and act on.",
+    status: "Selected Sample",
+  },
+  {
+    title: "Organization Brand Refresh",
+    category: "Brand Design",
+    problem: "An organization had scattered visuals that made its communication feel inconsistent across channels.",
+    solution: "Built a brand design direction with improved color usage, typography, layout rules, and presentation assets.",
+    outcome: "A more unified identity for proposals, events, social communication, and internal documents.",
+    status: "Selected Sample",
+  },
+  {
     title: "Conversion Portfolio System",
+    category: "Web + Brand System",
     problem: "The brand looked capable, but the page did not guide visitors toward a clear buying decision.",
     solution: "Rebuilt the homepage around positioning, proof, services, and direct WhatsApp conversion.",
     outcome: "A sharper narrative with fewer distractions and a stronger inquiry path.",
-  },
-  {
-    title: "Product Interface Direction",
-    problem: "The product idea had useful features, but the screens felt scattered and difficult to trust.",
-    solution: "Created a calmer UI system with clearer hierarchy, states, and user decision points.",
-    outcome: "A product experience that felt more premium, understandable, and ready for presentation.",
+    status: "Live Case Study",
   },
   {
     title: "AI Workflow Architecture",
+    category: "Upcoming Project",
     problem: "Creative work was taking too long because content and design tasks were handled manually.",
     solution: "Designed an AI-assisted workflow for repeatable content generation and review.",
     outcome: "A faster production rhythm without losing strategic control or brand consistency.",
+    status: "Upcoming",
   },
 ];
 
@@ -192,7 +229,7 @@ export default function Home() {
     trackVisit();
   }, []);
 
-  const whatsappUrl = `https://wa.me/${process.env.NEXT_PUBLIC_WHATSAPP_PHONE || "1234567890"}?text=${encodeURIComponent(
+  const whatsappUrl = `https://wa.me/${process.env.NEXT_PUBLIC_WHATSAPP_PHONE || "2348083439674"}?text=${encodeURIComponent(
     "Hi Disyn, I am interested in a design, web, or AI systems project."
   )}`;
 
@@ -243,6 +280,18 @@ export default function Home() {
         </nav>
       </header>
 
+      <nav className="fixed bottom-4 left-1/2 z-50 flex w-[calc(100%-1.5rem)] -translate-x-1/2 items-center justify-between rounded-full border border-white/10 bg-[#070A12]/70 px-2 py-2 shadow-2xl shadow-black/40 backdrop-blur-xl md:hidden">
+        {mobileNavItems.map((item) => (
+          <a
+            key={item.href}
+            href={item.href}
+            className="rounded-full px-3 py-2 text-[10px] font-black uppercase tracking-[0.12em] text-text-muted transition hover:bg-white/10 hover:text-white"
+          >
+            {item.label}
+          </a>
+        ))}
+      </nav>
+
       <motion.section
         id="home"
         ref={heroRef}
@@ -271,7 +320,7 @@ export default function Home() {
             variants={fadeUp}
             className="mx-auto mt-8 max-w-3xl text-lg font-medium leading-8 text-text-secondary md:text-2xl"
           >
-            Creative Systems Designer specializing in UI/UX, Web, and AI systems.
+            Creative Systems Designer specializing in Brand Design, Graphic Design, UI/UX, Web, and AI systems.
           </motion.p>
           <motion.p
             variants={fadeUp}
@@ -318,7 +367,7 @@ export default function Home() {
       >
         <div className="mt-12 grid gap-8 lg:grid-cols-[1.15fr_0.85fr]">
           <motion.p variants={fadeUp} className="text-xl leading-9 text-text-secondary md:text-2xl">
-            Every project is shaped to improve perception, usability, and conversion. The goal is not just to make a brand look better. The goal is to make people understand, trust, and act faster.
+            Every project is shaped to improve perception, usability, and conversion. The goal is not just to make a brand look better. The goal is to make people understand, trust, and act faster, whether it is a brand identity, church flyer, school campaign, organization design system, website, or product interface.
           </motion.p>
           <motion.div variants={stagger} className="grid gap-3 sm:grid-cols-2">
             {focusAreas.map((area) => (
@@ -355,7 +404,7 @@ export default function Home() {
       <SectionShell
         id="portfolio"
         eyebrow="Selected Work"
-        title="Proof through problem, solution, and outcome."
+        title="Selected work samples with problem, solution, and outcome."
         className="z-10 bg-[#090D16]/70"
       >
         <motion.div variants={stagger} className="mt-12 grid gap-6 lg:grid-cols-3">
@@ -366,6 +415,12 @@ export default function Home() {
               whileHover={{ y: -10, scale: 1.02 }}
               className="rounded-[2rem] border border-white/10 bg-[#0D111F]/80 p-7"
             >
+              <p className="mb-5 flex items-center justify-between gap-3 text-[10px] font-black uppercase tracking-[0.2em] text-accent-cyan">
+                <span>{project.category}</span>
+                <span className="rounded-full border border-white/10 px-3 py-1 text-text-muted">
+                  {project.status}
+                </span>
+              </p>
               <h3 className="text-2xl font-black text-white">{project.title}</h3>
               <div className="mt-8 space-y-6">
                 <div>

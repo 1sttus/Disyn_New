@@ -77,6 +77,29 @@ async function main() {
       solution: "Designed a sleek dark palette with glowing accents and geometric fonts.",
       impact: "Resulted in a 40% increase in investor brand recall during seed pitch.",
       tags: "Branding,Illustrator,Vector",
+      status: "published",
+    },
+    {
+      title: "Church Conference Visual System",
+      description: "Event identity, social flyers, banners, and announcement graphics for a worship conference.",
+      category: "Church Graphics",
+      imageUrl: "https://images.unsplash.com/photo-1507692049790-de58290a4334?w=800&auto=format&fit=crop",
+      problem: "The church needed a consistent visual system for online promotion and printed event communication.",
+      solution: "Built a bold graphic direction with reusable flyer layouts, typography, and announcement templates.",
+      impact: "Improved event clarity across social media, Sunday announcements, and printed materials.",
+      tags: "Church Design,Flyers,Event Branding",
+      status: "published",
+    },
+    {
+      title: "School Admission Campaign",
+      description: "Graphic campaign assets for admission awareness, parent communication, and social media.",
+      category: "School Graphics",
+      imageUrl: "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=800&auto=format&fit=crop",
+      problem: "The school needed clearer promotional materials that felt professional and easy for parents to understand.",
+      solution: "Designed a clean campaign system with admission flyers, digital posts, and information hierarchy.",
+      impact: "Made the admission message easier to share, read, and act on.",
+      tags: "School Design,Campaign,Social Media",
+      status: "published",
     },
     {
       title: "AlphaGen Web Interface",
@@ -87,6 +110,7 @@ async function main() {
       solution: "Created an intuitive, dark-mode data platform using node layout styling.",
       impact: "Reduced customer onboarding support queries by 65%.",
       tags: "Figma,UI/UX,Web App",
+      status: "published",
     },
     {
       title: "E-Commerce Blockchain Platform",
@@ -97,6 +121,7 @@ async function main() {
       solution: "Coded a reactive Next.js storefront utilizing client state caching and smart contract hooks.",
       impact: "Completed $150k in transaction volume in first 30 days.",
       tags: "NextJS,Solidity,Tailwind",
+      status: "published",
     },
     {
       title: "Aether AI Art Director",
@@ -107,6 +132,7 @@ async function main() {
       solution: "Crafted a model pipeline generating styled graphics via custom Stable Diffusion seeds.",
       impact: "Halved agency concept drafting time from 4 days to 4 hours.",
       tags: "AI,Stable Diffusion,Python",
+      status: "upcoming",
     },
   ];
 
