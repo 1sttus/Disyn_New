@@ -162,21 +162,34 @@ export default function PortfolioSection() {
                       
                       {/* Hover Overlay Icon */}
                       <div className="absolute inset-0 flex items-center justify-center bg-primary-bg/75 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                        <button
-                          onClick={() => {
-                            trackClick(project.title);
-                            setSelectedProject(project);
-                          }}
-                          className="p-3 rounded-full bg-accent-cyan text-primary-bg shadow-[0_0_15px_rgba(0,229,255,0.4)] cursor-pointer"
-                        >
-                          <Eye className="w-5 h-5 text-[#0B0F1A]" />
-                        </button>
+                        {project.status === "upcoming" ? (
+                          <span className="text-xs font-bold tracking-widest text-accent-warning border border-accent-warning/20 bg-accent-warning/5 px-4 py-2 rounded-full font-space uppercase">
+                            Coming Soon
+                          </span>
+                        ) : (
+                          <button
+                            onClick={() => {
+                              trackClick(project.title);
+                              setSelectedProject(project);
+                            }}
+                            className="p-3 rounded-full bg-accent-cyan text-primary-bg shadow-[0_0_15px_rgba(0,229,255,0.4)] cursor-pointer"
+                          >
+                            <Eye className="w-5 h-5 text-[#0B0F1A]" />
+                          </button>
+                        )}
                       </div>
 
                       {/* Category Label Tag */}
                       <span className="absolute top-4 left-4 px-3 py-1 rounded-full text-[10px] font-extrabold tracking-widest bg-primary-bg/85 backdrop-blur-sm text-accent-cyan border border-accent-cyan/20">
                         {project.category}
                       </span>
+
+                      {/* Upcoming Status Badge */}
+                      {project.status === "upcoming" && (
+                        <span className="absolute top-4 right-4 px-3 py-1 rounded-full text-[10px] font-extrabold tracking-widest bg-primary-bg/85 backdrop-blur-sm text-accent-warning border border-accent-warning/20">
+                          Upcoming
+                        </span>
+                      )}
                     </div>
 
                     {/* Title & Description Info */}
@@ -197,16 +210,23 @@ export default function PortfolioSection() {
                         ))}
                       </div>
 
-                      <button
-                        onClick={() => {
-                          trackClick(project.title);
-                          setSelectedProject(project);
-                        }}
-                        className="inline-flex items-center gap-1 text-xs font-bold text-accent-cyan hover:text-white transition-colors duration-200 mt-6 pt-4 border-t border-white/5 cursor-pointer text-left"
-                      >
-                        View Case Study
-                        <ArrowUpRight className="w-3.5 h-3.5" />
-                      </button>
+                      {project.status === "upcoming" ? (
+                        <div className="inline-flex items-center gap-1 text-xs font-bold text-accent-warning mt-6 pt-4 border-t border-white/5 select-none text-left w-full">
+                          <span>Upcoming Project</span>
+                          <span className="text-[9px] text-text-disabled uppercase tracking-wide ml-auto font-mono">Coming Soon</span>
+                        </div>
+                      ) : (
+                        <button
+                          onClick={() => {
+                            trackClick(project.title);
+                            setSelectedProject(project);
+                          }}
+                          className="inline-flex items-center gap-1 text-xs font-bold text-accent-cyan hover:text-white transition-colors duration-200 mt-6 pt-4 border-t border-white/5 cursor-pointer text-left w-full"
+                        >
+                          View Case Study
+                          <ArrowUpRight className="w-3.5 h-3.5" />
+                        </button>
+                      )}
                     </div>
                   </motion.div>
                 );

@@ -1,21 +1,19 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, ArrowUpRight, Shield } from "lucide-react";
+import { Home, User, Briefcase, Tag, Mail, Shield } from "lucide-react";
 import Link from "next/link";
 
 const navItems = [
-  { name: "Home", href: "#home" },
-  { name: "About", href: "#about" },
-  { name: "Portfolio", href: "#portfolio" },
-  { name: "Pricing", href: "#pricing" },
-  { name: "Contact", href: "#contact" },
+  { name: "Home", href: "#home", icon: Home },
+  { name: "About", href: "#about", icon: User },
+  { name: "Portfolio", href: "#portfolio", icon: Briefcase },
+  { name: "Pricing", href: "#pricing", icon: Tag },
+  { name: "Contact", href: "#contact", icon: Mail },
 ];
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeItem, setActiveItem] = useState("Home");
 
   useEffect(() => {
@@ -28,7 +26,7 @@ export default function Navbar() {
         const el = document.getElementById(section);
         if (el) {
           const rect = el.getBoundingClientRect();
-          if (rect.top <= 120 && rect.bottom >= 120) {
+          if (rect.top <= 150 && rect.bottom >= 150) {
             const name = section === "home" ? "Home" : section.charAt(0).toUpperCase() + section.slice(1);
             setActiveItem(name);
             break;
@@ -48,15 +46,12 @@ export default function Navbar() {
       elem.scrollIntoView({ behavior: "smooth" });
     }
     setActiveItem(item.name);
-    setMobileMenuOpen(false);
   };
 
   return (
     <>
-      <motion.header
-        initial={{ y: -100, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.8, ease: "easeOut" }}
+      {/* 💻 DESKTOP FLOATING NAVBAR (Header) */}
+      <header
         className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${
           scrolled ? "py-3 px-4 md:px-8" : "py-5 px-6 md:px-12"
         }`}
@@ -76,7 +71,7 @@ export default function Navbar() {
             <span className="w-1.5 h-1.5 rounded-full bg-accent-cyan animate-pulse" />
           </Link>
 
-          {/* Desktop Nav */}
+          {/* Desktop Nav Links */}
           <nav className="hidden md:flex items-center gap-2">
             {navItems.map((item) => {
               const isActive = activeItem === item.name;
@@ -98,8 +93,8 @@ export default function Navbar() {
             })}
           </nav>
 
-          {/* Call to Action Button */}
-          <div className="hidden md:flex items-center gap-4">
+          {/* Call to Action Actions */}
+          <div className="flex items-center gap-4">
             <Link
               href="/admin/dashboard"
               className="text-text-muted hover:text-accent-cyan transition-colors"
@@ -111,70 +106,37 @@ export default function Navbar() {
             <a
               href="#pricing"
               onClick={(e) => handleLinkClick(e, { name: "Pricing", href: "#pricing" })}
-              className="btn-primary ripple-fx text-xs tracking-wider uppercase inline-flex items-center gap-1.5"
+              className="hidden md:inline-flex btn-primary ripple-fx text-xs tracking-wider uppercase items-center gap-1.5"
             >
               Hire Me
-              <ArrowUpRight className="w-4 h-4 text-[#0B0F1A]" />
             </a>
           </div>
-
-          {/* Mobile Menu Trigger */}
-          <button
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="md:hidden p-2 text-text-muted hover:text-white transition-colors"
-          >
-            {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-          </button>
         </div>
-      </motion.header>
+      </header>
 
-      {/* Mobile Menu Drawer */}
-      <AnimatePresence>
-        {mobileMenuOpen && (
-          <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            className="fixed inset-0 top-[70px] z-40 w-full h-[calc(100vh-70px)] bg-primary-bg/95 backdrop-blur-lg md:hidden flex flex-col items-center justify-center gap-6 border-t border-white/5"
-          >
-            {navItems.map((item) => {
-              const isActive = activeItem === item.name;
-              return (
-                <a
-                  key={item.name}
-                  href={item.href}
-                  onClick={(e) => handleLinkClick(e, item)}
-                  className={`text-2xl font-bold font-space uppercase tracking-widest px-6 py-2 ${
-                    isActive
-                      ? "text-accent-cyan border-b-2 border-accent-cyan"
-                      : "text-text-secondary"
-                  }`}
-                >
-                  {item.name}
-                </a>
-              );
-            })}
-            <div className="flex flex-col items-center gap-6 mt-8">
-              <a
-                href="#pricing"
-                onClick={(e) => handleLinkClick(e, { name: "Pricing", href: "#pricing" })}
-                className="btn-primary ripple-fx text-sm tracking-wider uppercase inline-flex items-center gap-2 px-8 py-3"
-              >
-                Hire Me
-                <ArrowUpRight className="w-5 h-5 text-[#0B0F1A]" />
-              </a>
-              <Link
-                href="/admin/dashboard"
-                onClick={() => setMobileMenuOpen(false)}
-                className="flex items-center gap-2 text-sm text-text-disabled hover:text-accent-cyan transition-colors"
-              >
-                <Shield className="w-4 h-4" />
-                Admin Access
-              </Link>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {/* 📱 MOBILE STICKY BOTTOM TAB BAR (Glassmorphism effect) */}
+      <nav className="md:hidden fixed bottom-4 left-4 right-4 z-50 rounded-2xl border border-white/10 bg-[#0B0F1A]/80 backdrop-blur-xl p-2.5 flex items-center justify-around shadow-[0_10px_35px_rgba(0,0,0,0.6)]">
+        {navItems.map((item) => {
+          const isActive = activeItem === item.name;
+          return (
+            <a
+              key={item.name}
+              href={item.href}
+              onClick={(e) => handleLinkClick(e, item)}
+              className={`flex flex-col items-center justify-center gap-1 py-1 px-3 rounded-xl transition-all ${
+                isActive
+                  ? "text-accent-cyan bg-accent-cyan/10"
+                  : "text-text-secondary hover:text-white"
+              }`}
+            >
+              <item.icon className="w-5 h-5" />
+              <span className="text-[9px] font-black uppercase tracking-wider font-space">
+                {item.name}
+              </span>
+            </a>
+          );
+        })}
+      </nav>
     </>
   );
 }
