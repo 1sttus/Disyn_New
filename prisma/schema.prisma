@@ -7,13 +7,96 @@ generator client {
   provider = "prisma-client-js"
 }
 
+model Organization {
+  id            String    @id @default(cuid())
+  slug          String    @unique
+  name          String
+  description   String?
+  domain        String?
+  status        String    @default("active")
+  primaryColor  String?
+  logoUrl       String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  deletedAt     DateTime?
+  users         User[]
+  programs      Program[]
+  courses       Course[]
+}
+
 model User {
-  id        String   @id @default(cuid())
-  email     String   @unique
-  password  String
-  name      String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id              String        @id @default(cuid())
+  email           String        @unique
+  password        String
+  name            String?
+  role            String        @default("learner")
+  organizationId  String?
+  organization    Organization? @relation(fields: [organizationId], references: [id], onDelete: SetNull)
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+}
+
+model Program {
+  id              String      @id @default(cuid())
+  organizationId  String
+  organization    Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  title           String
+  slug            String
+  description     String?
+  status          String      @default("draft")
+  level           String      @default("foundation")
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+  deletedAt       DateTime?
+  courses         Course[]
+
+  @@unique([organizationId, slug])
+}
+
+model Course {
+  id              String      @id @default(cuid())
+  organizationId  String
+  organization    Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  programId       String?
+  program         Program?    @relation(fields: [programId], references: [id], onDelete: SetNull)
+  title           String
+  slug            String
+  description     String?
+  status          String      @default("draft")
+  level           String      @default("foundation")
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+  deletedAt       DateTime?
+  modules         Module[]
+
+  @@unique([organizationId, slug])
+}
+
+model Module {
+  id          String    @id @default(cuid())
+  courseId    String
+  course      Course    @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  title       String
+  slug        String
+  description String?
+  status      String    @default("draft")
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  deletedAt   DateTime?
+  lessons     Lesson[]
+}
+
+model Lesson {
+  id          String    @id @default(cuid())
+  moduleId    String
+  module      Module    @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+  title       String
+  slug        String
+  content     String?
+  status      String    @default("draft")
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  deletedAt   DateTime?
 }
 
 model Project {

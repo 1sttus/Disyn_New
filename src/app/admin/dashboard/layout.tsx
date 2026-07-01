@@ -2,7 +2,7 @@
 
 import { useSession, signOut } from "next-auth/react";
 import { useRouter, usePathname } from "next/navigation";
-import { Shield, Users, Briefcase, Tag, LogOut, Home, Loader2 } from "lucide-react";
+import { Shield, Users, Briefcase, Tag, LogOut, Home, Loader2, GraduationCap } from "lucide-react";
 import Link from "next/link";
 import { useEffect } from "react";
 
@@ -35,6 +35,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
   const menuItems = [
     { name: "Leads (CRM)", href: "/admin/dashboard", icon: Users },
+    { name: "Learning Ecosystem", href: "/admin/dashboard/learning", icon: GraduationCap },
     { name: "Projects Portfolio", href: "/admin/dashboard/projects", icon: Briefcase },
     { name: "Pricing Packages", href: "/admin/dashboard/packages", icon: Tag },
   ];
